@@ -6,7 +6,7 @@
     <artifactId>mind-assess</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mind-assess</name>
-    <description>Demo project for Spring Boot</description>
+    <description>心里测评系统后端</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -102,5 +102,17 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profileActive>dev</profileActive>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
 </project>

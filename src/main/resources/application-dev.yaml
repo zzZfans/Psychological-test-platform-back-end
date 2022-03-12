@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: mind-assess
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.106.150.36:3306/____?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai
+    name: defaultDataSource
+    username: DXSXLCSPT
+    password: shunlibiye
+server:
+  port: 8080

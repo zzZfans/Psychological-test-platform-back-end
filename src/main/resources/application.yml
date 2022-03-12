@@ -1,13 +1,5 @@
 spring:
-  application:
-    name: mind-assess
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/book?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai
-    name: defaultDataSource
-    username: root
-    password: zzc123
-server:
-  port: 8080
+  profiles:
+    active: dev
 
 
