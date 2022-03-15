@@ -9,3 +9,11 @@ spring:
     password: shunlibiye
 server:
   port: 8080
+#shiro:
+#  web:
+#    enabled: true
+#  successUrl: /index
+#  loginUrl: /user/login
+#  sessionManager:
+#    sessionIdCookieEnabled: true
+#  unauthorizedUrl: /login

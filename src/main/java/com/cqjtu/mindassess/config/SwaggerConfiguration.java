@@ -16,7 +16,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import static springfox.documentation.builders.RequestHandlerSelectors.withClassAnnotation;
 import static springfox.documentation.builders.RequestHandlerSelectors.withMethodAnnotation;
 
-
+/**
+ * @author zhangning
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfiguration {
