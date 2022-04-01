@@ -22,3 +22,9 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*mapper.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+minio:
+  end-point: http://www.amosdzhn.space:9000
+  access-key: 7ED2W1KFS4EF718Y2YVH
+  secret-key: UJ8X+g5YYrunataKDqpQnn9MnT+njmR0CfnpqPXR
+  bucket: mentalhealth
+  access-url-prefix: http://www.amosdzhn.space:9000
