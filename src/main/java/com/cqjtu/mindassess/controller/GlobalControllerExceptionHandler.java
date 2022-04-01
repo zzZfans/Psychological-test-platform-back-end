@@ -14,7 +14,7 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ApiResponse<?> businessExceptionHandler(BusinessException exception) {
         String message = exception.getMessage();
-        return ApiResponse.fail(500,message,null);
+        return ApiResponse.fail(200,message,null);
     }
 
 //    @ExceptionHandler(AuthorizationException.class)

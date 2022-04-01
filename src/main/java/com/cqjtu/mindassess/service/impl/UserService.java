@@ -1,49 +1,22 @@
 package com.cqjtu.mindassess.service.impl;
 
-import com.cqjtu.mindassess.pojo.vo.UserReq;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.cqjtu.mindassess.entity.User;
+import com.cqjtu.mindassess.mapper.UserMapper;
 import com.cqjtu.mindassess.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-
-
-/**
- * @author zhangning
- */
 
 @Service
 public class UserService implements IUserService {
+    @Autowired
+    UserMapper userMapper;
 
-
-    // mock
-    private static HashMap<String,String> mysql;
-    static {
-        mysql = new HashMap<>();
-        mysql.put("zs","1");
-        mysql.put("ls","1");
-        mysql.put("ww","1");
-    }
 
     @Override
-    public boolean usernamePasswordLogin(String username, String password) {
-        return false;
-    }
-
-    @Override
-    public boolean phoneNumberLogin(String phoneNumber, String code) {
-        return false;
-    }
-
-    @Override
-    public boolean emailLogin(String email, String code) {
-        return false;
-    }
-
-    @Override
-    public void login(UserReq user) {
-        final int method = user.getLoginMethod();
-        if( method == 1){
-            //TODO
-        }
+    public User getUserByUsername(String username) {
+        QueryWrapper<User> qw = new QueryWrapper<>();
+        qw.eq("username",username);
+        return userMapper.selectOne(qw);
     }
 }

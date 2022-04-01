@@ -3,10 +3,10 @@ spring:
     name: mind-assess
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.106.150.36:3306/____?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://www.amosdzhn.space:10000/db_dxsxl?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai
     name: defaultDataSource
-    username: DXSXLCSPT
-    password: shunlibiye
+    username: auser
+    password: GOGO123..
 server:
   port: 8080
 #shiro:
@@ -17,3 +17,8 @@ server:
 #  sessionManager:
 #    sessionIdCookieEnabled: true
 #  unauthorizedUrl: /login
+mybatis-plus:
+  type-aliases-package: com.cqjtu.mindassess.entity
+  mapper-locations: classpath:/mapper/*mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

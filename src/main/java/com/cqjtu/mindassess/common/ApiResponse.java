@@ -47,6 +47,10 @@ public class ApiResponse <T> implements Serializable {
         return new ApiResponse<>(true,ResponseCode.SUCCESS,data);
     }
 
+    public static <T> ApiResponse<?> success(String msg){
+        return new ApiResponse<>(true,200,msg,null);
+    }
+
     public static <T> ApiResponse<?> success(int code,String message,T data){
         return new ApiResponse<>(true,code,message,data);
     }
