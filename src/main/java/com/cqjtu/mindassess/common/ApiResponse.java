@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 /**
  * @author zhangning
  * @param <T>
+ *     通用响应
  */
 @Data
 public class ApiResponse <T> implements Serializable {

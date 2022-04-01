@@ -10,6 +10,11 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author zhangning
+ *
+ *      登录服务具体实现
+ */
 @Service
 @Slf4j
 public class AuthService implements IAuthService {

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author zhangning
+ *
+ *  Shiro 自定义Realm,通过连接数据库完成认证与授权
  */
 @Slf4j
 public class UserRealm extends AuthorizingRealm {

@@ -11,11 +11,15 @@ import org.springframework.context.annotation.Lazy;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author zhangning
+ * Shiro配置:
+ *      1.ShiroFilterFactoryBean
+ *      2.DefaultWebSecurityManager
+ *      3.Realm
+ */
 @Configuration
 public class ShiroConfiguration {
-    // ShiroFilterFactoryBean
-    // DefaultWebSecurityManager
-    // Realm
 
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier("defaultWebSecurityManager") DefaultWebSecurityManager defaultWebSecurityManager) {
