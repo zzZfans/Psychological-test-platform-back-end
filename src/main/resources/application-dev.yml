@@ -29,6 +29,8 @@ minio:
   bucket: mentalhealth
   access-url-prefix: http://www.amosdzhn.space:9000
 knife4j:
+  enable: true
+  production: false
   basic:
     enable: true
     username: a

@@ -2,7 +2,11 @@ package com.cqjtu.mindassess.controller;
 
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.pojo.req.UserLoginReq;
+import com.cqjtu.mindassess.pojo.req.UserRegisterReq;
 import com.cqjtu.mindassess.service.IAuthService;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  *  用户登录登出
  */
+@Api(tags = {"登录登出控制器"})
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -30,6 +35,8 @@ public class AuthController {
         return ((String) session.getAttribute("userId"));
     }
 
+    @ApiOperationSupport(author = "zhangning")
+    @ApiOperation("登录")
     @PostMapping("/login")
     public ApiResponse<?> login(@RequestBody UserLoginReq userLoginReq){
         Subject subject = SecurityUtils.getSubject();
@@ -42,6 +49,8 @@ public class AuthController {
         return ApiResponse.success("登录成功");
     }
 
+    @ApiOperationSupport(author = "zhangning")
+    @ApiOperation("登出")
     @PostMapping("/logout")
     public ApiResponse<?> logout(){
         Subject subject = SecurityUtils.getSubject();
@@ -50,11 +59,5 @@ public class AuthController {
         }
         subject.logout();
         return ApiResponse.success("登录成功");
-    }
-
-    @PostMapping("/register")
-    public ApiResponse<?> register(){
-        //TODO
-        return null;
     }
 }
