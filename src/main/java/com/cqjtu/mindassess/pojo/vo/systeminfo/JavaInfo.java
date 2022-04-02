@@ -1,9 +1,12 @@
-package com.cqjtu.mindassess.pojo.vo.sysinfo;
+package com.cqjtu.mindassess.pojo.vo.systeminfo;
 
 import lombok.Data;
 
+/**
+ * @author Zfans
+ */
 @Data
-public class SysJavaInfo {
+public class JavaInfo {
     private String jvmName;
     private String jvmVersion;
     private String jvmVendor;
