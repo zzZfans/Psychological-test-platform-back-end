@@ -28,3 +28,8 @@ minio:
   secret-key: UJ8X+g5YYrunataKDqpQnn9MnT+njmR0CfnpqPXR
   bucket: mentalhealth
   access-url-prefix: http://www.amosdzhn.space:9000
+knife4j:
+  basic:
+    enable: true
+    username: a
+    password: a
