@@ -31,22 +31,24 @@ public class UserController {
     @PostMapping("/register")
     public ApiResponse<?> register(@RequestBody UserRegisterReq userRegisterReq){
         //用户名是否重复，手机号或邮箱是否重复
-        String phone = userRegisterReq.getPhoneNumber();
-        if( userService.getUserByUsername(userRegisterReq.getUsername()) != null ){
+        String username = userRegisterReq.getUsername();
+        String phoneNumber = userRegisterReq.getPhoneNumber();
+        String emailAddress = userRegisterReq.getEmailAddress();
+        if( userService.getUserByUsername(username) != null ){
             return ApiResponse.fail(400,"该用户名已存在",null);
         }
-        if( userRegisterReq.getPhoneNumber() == null || userRegisterReq.getPhoneNumber().equals("") ){
-            // 手机注册
-            if( userService.getUserByPhoneNumber(userRegisterReq.getPhoneNumber()) != null ){
+        if( phoneNumber != null && !phoneNumber.equals("") ){
+            if( userService.getUserByPhoneNumber(phoneNumber) != null ){
                 return ApiResponse.fail(400,"该手机号已被注册",null);
+            }else {
+                // 验证手机验证码正确性
+                if ( !smService.confirmSmCode(phoneNumber,userRegisterReq.getCode(), ShortMessageScenes.SM_REGISTER.scenes)) {
+                    return ApiResponse.fail(400,"验证码错误",null);
+                }
             }
-            // 验证手机验证码正确性
-            if ( !smService.confirmSmCode(phone,userRegisterReq.getCode(), ShortMessageScenes.SM_REGISTER.scenes)) {
-                return ApiResponse.fail(400,"验证码错误",null);
-            }
-        }else {
+        }else if( emailAddress != null && !emailAddress.equals("")){
             // 邮箱注册
-            if( userService.getUserByEmail(userRegisterReq.getEmailAddress()) != null ){
+            if( userService.getUserByEmail(emailAddress) != null ){
                 return ApiResponse.fail(400,"该邮箱已被绑定",null);
             }
             // TODO
@@ -59,10 +61,10 @@ public class UserController {
         user.setSalt(salt);
         String md5Password = MD5Util.encryption(userRegisterReq.getPassword() + salt);  // 加盐加密
         user.setPassword(md5Password);
-        user.setPhoneNumber(phone);
+        user.setPhoneNumber(phoneNumber);
         user.setEmailAddress(userRegisterReq.getEmailAddress());
         if( userService.addUser(user) != 1) {
-            return ApiResponse.fail(500,"注册失败",null);
+            return ApiResponse.fail(400,"注册失败",null);
         }
         return ApiResponse.success(200,"注册成功",null);
     }
