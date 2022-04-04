@@ -31,17 +31,14 @@ public class UserRealm extends AuthorizingRealm {
     // 认证
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        log.info("execute doGetAuthenticationInfo()");
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String crtUsername = token.getUsername();
         String crtPassword = String.valueOf(token.getPassword());
-        log.info("当前未加密的密码: " + crtPassword);
         User user = userService.getUserByUsername(crtUsername);
         if( user !=null ){
             String encryptionPassword = MD5Util.encryption(crtPassword + user.getSalt());
-            log.info("当前加密后的密码: " + encryptionPassword);
-            log.info("数据库查询的加密后的密码: " + user.getPassword());
-            return new SimpleAuthenticationInfo(user.getUsername(), encryptionPassword, "userRealm");
+            token.setPassword(encryptionPassword.toCharArray());
+            return new SimpleAuthenticationInfo(user, user.getPassword(), "userRealm");
 
         }
         return null;
