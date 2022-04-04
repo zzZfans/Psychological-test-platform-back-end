@@ -19,4 +19,23 @@ public class UserService implements IUserService {
         qw.eq("username",username);
         return userMapper.selectOne(qw);
     }
+
+    @Override
+    public User getUserByPhoneNumber(String phone) {
+        QueryWrapper<User> qw = new QueryWrapper<>();
+        qw.eq("phone_number",phone);
+        return userMapper.selectOne(qw);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        QueryWrapper<User> qw = new QueryWrapper<>();
+        qw.eq("email_address",email);
+        return userMapper.selectOne(qw);
+    }
+
+    @Override
+    public int addUser(User user) {
+        return userMapper.insert(user);
+    }
 }

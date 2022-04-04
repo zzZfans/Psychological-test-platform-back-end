@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   application:
     name: mind-assess
@@ -7,8 +9,18 @@ spring:
     name: defaultDataSource
     username: auser
     password: GOGO123..
-server:
-  port: 8080
+  redis:
+    host: www.amosdzhn.space
+    port: 6379
+    database: 0
+    password: 123456!
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 5000
 #shiro:
 #  web:
 #    enabled: true
@@ -35,3 +47,13 @@ knife4j:
     enable: true
     username: a
     password: a
+short-message:
+  tencent-sm:
+    endpoint: sms.tencentcloudapi.com
+    region: ap-guangzhou
+    secret-id: AKIDiFVUDfqjLgkX3JI0RcW8TXKq52i8G8k5
+    secret-key: 5tRggQt62i8H9k47uQfeNp0uYv1pMddM
+    sdk-appid: 1400644446
+    sign: 张宁个人笔记网
+    template-ids:
+      - 1355525  # 注册

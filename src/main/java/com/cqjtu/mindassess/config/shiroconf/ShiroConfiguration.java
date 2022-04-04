@@ -1,5 +1,6 @@
 package com.cqjtu.mindassess.config.shiroconf;
 
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -42,6 +43,9 @@ public class ShiroConfiguration {
 
     @Bean(name = "userRealm")
     public UserRealm userRealm() {
-        return new UserRealm();
+        UserRealm userRealm = new UserRealm();
+//        userRealm.setAuthenticationTokenClass(AuthenticationToken.class);
+//        userRealm.setCredentialsMatcher(new CustomCredentialsMatcher());
+        return userRealm;
     }
 }
