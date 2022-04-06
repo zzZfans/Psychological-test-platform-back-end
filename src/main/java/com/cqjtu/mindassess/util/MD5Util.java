@@ -3,7 +3,7 @@ package com.cqjtu.mindassess.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class MD5Util {
+public abstract class MD5Util {
 
 
     private static final char[] chars = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};

@@ -7,7 +7,6 @@ import com.cqjtu.mindassess.pojo.vo.systeminfo.SystemInfoVo;
 import com.cqjtu.mindassess.service.ISystemInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,6 @@ public class SystemInfoController {
     @Autowired
     ISystemInfoService iSystemInfoService;
 
-    @RequiresPermissions("systemInfo:view")
     @GetMapping("/info")
     @OperationLog("获取系统资源")
     @ApiOperation("获取系统信息")

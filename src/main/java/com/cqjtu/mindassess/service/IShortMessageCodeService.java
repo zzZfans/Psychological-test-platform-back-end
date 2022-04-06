@@ -23,5 +23,5 @@ public interface IShortMessageCodeService {
      * @param sscenes - 使用场景
      * @return - 验证成功返回true,验证失败返回false
      */
-    boolean confirmSmCode(String phoneNumber,String code,String sscenes);
+    boolean confirmSmCode(String phoneNumber,String code,String scenes);
 }

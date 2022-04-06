@@ -1,6 +1,7 @@
 package com.cqjtu.mindassess.service.impl;
 
 import com.cqjtu.mindassess.config.smconfig.TencentSmProperties;
+import com.cqjtu.mindassess.exception.SystemErrorException;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.sms.v20190711.SmsClient;
@@ -56,7 +57,7 @@ public class ShortMessageCodeService implements IShortMessageCodeService {
             smsClient.SendSms(req);
         } catch (TencentCloudSDKException e) {
             e.printStackTrace();
-            return -1;
+            throw new SystemErrorException("短信服务异常");
         }
         return KEY_EXPIRED_TIME * 60;
     }
