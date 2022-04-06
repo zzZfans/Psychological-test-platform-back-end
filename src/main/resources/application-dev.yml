@@ -9,6 +9,8 @@ spring:
     name: defaultDataSource
     username: auser
     password: GOGO123..
+    hikari:
+      max-lifetime: 60000
   redis:
     host: www.amosdzhn.space
     port: 6379
