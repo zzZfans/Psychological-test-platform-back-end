@@ -1,6 +1,7 @@
 package com.cqjtu.mindassess.controller;
 
 import com.cqjtu.mindassess.common.ApiResponse;
+import com.cqjtu.mindassess.enums.ShortMessageScenes;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -29,19 +30,28 @@ public class ShortMessageController {
     IShortMessageCodeService shortMessageCodeService;
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "phoneNumber",value = "电话号码"),
-            @ApiImplicitParam(name = "scenes",value = "使用场景,例如注册(register)")
+            @ApiImplicitParam(name = "phoneNumber",value = "电话号码")
     })
-    @ApiOperation(value = "短信验证码")
-    @GetMapping("/code")
-    public ApiResponse<?> requestSmCode(@RequestParam("phoneNumber") String phoneNumber,
-                                        @RequestParam("scenes") String scenes){
-        long expireTime = shortMessageCodeService.requestSmCode(phoneNumber, scenes);
-        if( expireTime == -1){
-            return ApiResponse.fail(400,"发送失败",null);
-        }
+    @ApiOperation(value = "注册时短信验证码")
+    @GetMapping("/code/register")
+    public ApiResponse<?> requestSmCodeForRegister(@RequestParam("phoneNumber") String phoneNumber){
+        long expireTime = shortMessageCodeService.requestSmCode(phoneNumber, ShortMessageScenes.SM_REGISTER.scenes);
         Map<String,Long> map = new HashMap<>();
         map.put("expireTime",expireTime);
         return ApiResponse.success(map);
     }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "phoneNumber",value = "电话号码")
+    })
+    @ApiOperation(value = "注册时短信验证码")
+    @GetMapping("/code/login")
+    public ApiResponse<?> requestSmCodeForLogin(@RequestParam("phoneNumber") String phoneNumber){
+        long expireTime = shortMessageCodeService.requestSmCode(phoneNumber, ShortMessageScenes.SM_LOGIN.scenes);
+        Map<String,Long> map = new HashMap<>();
+        map.put("expireTime",expireTime);
+        return ApiResponse.success(map);
+    }
+
 }
