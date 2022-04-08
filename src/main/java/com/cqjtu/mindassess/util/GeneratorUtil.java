@@ -14,9 +14,20 @@ import java.util.Collections;
 
 /**
  * @author: author
+ *
+ * 代码生成器
  * @date: 2022/3/10
  */
 public abstract class GeneratorUtil {
+
+
+    /**
+     * 注意
+     *          使用代码生成器时候修改下列地方：
+     *              1.outputDir 路径参数
+     *              2.pathInfo 中的路径
+     *              3.include 中的数据库表名
+     */
 
     public static void main(String[] args) {
 
@@ -26,7 +37,7 @@ public abstract class GeneratorUtil {
                             .enableSwagger() // 开启 swagger 模式
 //                            .disableOpenDir()
                             .fileOverride() // 覆盖已生成文件
-                            .outputDir("D:\\awesome\\mind-assess\\src\\main\\java"); // 指定输出目录
+                            .outputDir("F:\\awesome\\mind-assess\\src\\main\\java"); // 指定输出目录
                 })
                 .packageConfig(builder -> {
                     builder.parent("com.cqjtu.mindassess") // 设置父包名
@@ -35,10 +46,10 @@ public abstract class GeneratorUtil {
                             .serviceImpl("service.impl")
                             .mapper("mapper")
                             .controller("controller")
-                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:\\awesome\\mind-assess\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, "F:\\awesome\\mind-assess\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("user_role") // 设置需要生成的表名
+                    builder.addInclude("role_permission") // 设置需要生成的表名
                             .entityBuilder()   // 实体策略配置
                             .idType(IdType.AUTO)
                             .enableLombok()
