@@ -1,7 +1,9 @@
 package com.cqjtu.mindassess.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cqjtu.mindassess.entity.Role;
 import com.cqjtu.mindassess.entity.User;
+import com.cqjtu.mindassess.pojo.vo.user.UserInfoVo;
 
 import java.util.List;
 
@@ -38,4 +40,29 @@ public interface ISysUserService extends IService<User> {
      * @param user 用户实体实例
      */
     boolean createDefaultUser(User user);
+
+
+    /**
+     * 校验加密的密码是否正确
+     * @param username 用户名
+     * @param password 密码
+     * @return 校验成功返回User实例，用户名不存在或加密密码验证错误抛出业务异常
+     */
+    User checkEncryptionPassword(String username,String password);
+
+
+    /**
+     * 根据与用户名，查询用户信息
+     * @param username - 用户名
+     * @return 用户信息
+     */
+    UserInfoVo queryUserInfoByUsername(String username);
+
+
+    /**
+     * 根据用户名查询用户角色集合
+     * @param username 用户名
+     * @return 角色信息,若不存在返回null
+     */
+    List<Role> queryRolesByUsername(String username);
 }

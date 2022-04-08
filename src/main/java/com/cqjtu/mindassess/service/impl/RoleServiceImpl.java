@@ -36,10 +36,4 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     public List<Role> queryRolesByIds(Set<Long> ids) {
         return roleMapper.selectBatchIds(ids);
     }
-
-    @Override
-    public Set<Role> queryROlesByIds(Set<Long> ids) {
-        List<Role> roles = queryRolesByIds(ids);
-        return new HashSet<>(roles);
-    }
 }

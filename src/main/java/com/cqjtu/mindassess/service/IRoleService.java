@@ -27,6 +27,6 @@ public interface IRoleService extends IService<Role> {
 
     List<Role> queryRolesByIds(Set<Long> ids);
 
-    Set<Role> queryROlesByIds(Set<Long> ids);
+
 
 }

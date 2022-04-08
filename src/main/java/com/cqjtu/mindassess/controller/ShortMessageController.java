@@ -45,7 +45,7 @@ public class ShortMessageController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "phoneNumber",value = "电话号码")
     })
-    @ApiOperation(value = "注册时短信验证码")
+    @ApiOperation(value = "登录时短信验证码")
     @GetMapping("/code/login")
     public ApiResponse<?> requestSmCodeForLogin(@RequestParam("phoneNumber") String phoneNumber){
         long expireTime = shortMessageCodeService.requestSmCode(phoneNumber, ShortMessageScenes.SM_LOGIN.scenes);

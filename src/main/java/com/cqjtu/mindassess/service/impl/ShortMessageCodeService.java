@@ -32,7 +32,7 @@ public class ShortMessageCodeService implements IShortMessageCodeService {
     TencentSmProperties tencentSmProperties;
 
     // 过期时间
-    private final long KEY_EXPIRED_TIME = 10;
+    private static final long KEY_EXPIRED_TIME = 10;
 
     @Override
     public long requestSmCode(String phoneNumber,String scenes) {
@@ -69,6 +69,7 @@ public class ShortMessageCodeService implements IShortMessageCodeService {
             return true;
         }
         String key = phoneNumber + ":" + scenes + ":" + code;
-        return stringRedisTemplate.opsForValue().setIfPresent(key,"",0L,TimeUnit.NANOSECONDS);
+
+        return Boolean.TRUE.equals(stringRedisTemplate.opsForValue().setIfPresent(key, "", 1, TimeUnit.SECONDS));
     }
 }

@@ -31,18 +31,24 @@ public class UserInfoVo {
     private Integer sex;
     @ApiModelProperty("出生日期")
     private LocalDate dateOfBirth;
-    @ApiModelProperty("")
+    @ApiModelProperty("头像")
     private String avatar;
-    @ApiModelProperty("")
+    @ApiModelProperty("人脸识别源图 ")
     private String faceRecognitionSource;
-    @ApiModelProperty
+    @ApiModelProperty("最近一次登录 ip")
     private String lastLoginIp;
-    @ApiModelProperty
+    @ApiModelProperty("最后一次登录时间")
     private String lastLoginTime;
+    @ApiModelProperty("状态变更者 id")
     private String stateChangerId;
+    @ApiModelProperty("状态变更时间")
     private LocalDateTime stateChangeTime;
+    @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
+    @ApiModelProperty("更新时间")
     private LocalDateTime updateTime;
-    Set<Role> roles;
+    @ApiModelProperty("角色列表")
+    Set<RoleInfo> roles;
+    @ApiModelProperty("权限列表")
     Set<String> permissions;
 }

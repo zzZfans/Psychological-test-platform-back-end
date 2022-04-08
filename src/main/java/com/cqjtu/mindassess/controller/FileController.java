@@ -26,7 +26,7 @@ public class FileController {
 
     @ApiOperationSupport(author = "zhangning")
     @ApiOperation("单个文件上传")
-    @SaCheckPermission(value = {"file-upload"},orRole = {"admin"})
+    @SaCheckPermission(value = {"file-upload"},orRole = {"general"})
     @PostMapping("/upload")
     public ApiResponse<?> fileUpload(MultipartFile file){
         String assessUrl = fileService.fileUpload(file);

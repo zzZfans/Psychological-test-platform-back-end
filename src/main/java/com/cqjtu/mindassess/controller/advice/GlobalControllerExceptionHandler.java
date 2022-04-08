@@ -1,7 +1,9 @@
 package com.cqjtu.mindassess.controller.advice;
 
+import cn.dev33.satoken.exception.SaTokenException;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.exception.BusinessException;
+import com.cqjtu.mindassess.exception.SystemErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -21,10 +23,24 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
 
+
+    /**
+     * 系统错误异常处理
+     * @param exception
+     * @return
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(SystemErrorException.class)
+    public ApiResponse<?> systemErrorHandler(SystemErrorException exception) {
+        return ApiResponse.fail(500,exception.getMessage(),null);
+    }
+
+    /**
+     * 业务异常处理
+     */
     @ExceptionHandler(BusinessException.class)
     public ApiResponse<?> businessExceptionHandler(BusinessException exception) {
-        String message = exception.getMessage();
-        return ApiResponse.fail(200,message,null);
+        return ApiResponse.fail(200,exception.getMessage(),null);
     }
 
     /**
@@ -41,4 +57,12 @@ public class GlobalControllerExceptionHandler {
         return ApiResponse.fail(400,"参数错误",map);
     }
 
+    /**
+     * 权限异常处理器
+     * @param exception - SaToken顶级异常
+     */
+    @ExceptionHandler(SaTokenException.class)
+    public ApiResponse<?> saTokenHandler(SaTokenException exception) {
+        return ApiResponse.fail(200,"没有权限",exception.getMessage());
+    }
 }

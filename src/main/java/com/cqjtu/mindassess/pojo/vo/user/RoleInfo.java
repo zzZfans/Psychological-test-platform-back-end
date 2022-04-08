@@ -1,13 +1,15 @@
 package com.cqjtu.mindassess.pojo.vo.user;
 
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@ApiModel("角色信息")
 @Data
-public class RoleInfoVo {
+public class RoleInfo {
     @ApiModelProperty("角色主键")
     private Long id;
 
