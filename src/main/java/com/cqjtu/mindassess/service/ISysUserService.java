@@ -1,9 +1,11 @@
 package com.cqjtu.mindassess.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cqjtu.mindassess.entity.Permission;
 import com.cqjtu.mindassess.entity.Role;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.pojo.vo.user.UserInfoVo;
+import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
 
 import java.util.List;
 
@@ -65,4 +67,20 @@ public interface ISysUserService extends IService<User> {
      * @return 角色信息,若不存在返回null
      */
     List<Role> queryRolesByUsername(String username);
+
+
+    /**
+     * 根据用户名查询用户权限
+     * @param username 用户名
+     * @return
+     */
+    List<Permission> queryUserPermission(String username);
+
+
+    /**
+     * 根据用户名查询用户Nav信息
+     * @param username 用户名
+     * @return
+     */
+    List<UserNavVo> queryUserNavByUsername(String username);
 }

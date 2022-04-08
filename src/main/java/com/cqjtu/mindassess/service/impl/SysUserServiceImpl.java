@@ -8,6 +8,7 @@ import com.cqjtu.mindassess.exception.SystemErrorException;
 import com.cqjtu.mindassess.mapper.UserMapper;
 import com.cqjtu.mindassess.pojo.vo.user.RoleInfo;
 import com.cqjtu.mindassess.pojo.vo.user.UserInfoVo;
+import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
 import com.cqjtu.mindassess.service.*;
 import com.cqjtu.mindassess.util.EmptyChecker;
 import com.cqjtu.mindassess.util.MD5Util;
@@ -24,8 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements ISysUserService {
 
-    @Resource
-    UserMapper userMapper;
     @Resource
     IRoleService roleService;
     @Resource
@@ -158,5 +157,44 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
         List<Role> roles = roleService.queryRolesByIds(roleIds);
 
         return roles;
+    }
+
+    @Override
+    public List<Permission> queryUserPermission(String username) {
+        List<Role> roles = queryRolesByUsername(username);
+        if( EmptyChecker.isEmpty(roles) ){
+            return null;
+        }
+        Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
+        List<RolePermission> rolePermissions = rolePermissionService.listByIds(roleIds);
+        if( EmptyChecker.isEmpty(rolePermissions) ){
+            return null;
+        }
+        Set<Long> permissionIds = rolePermissions.stream().map(RolePermission::getPermissionId).collect(Collectors.toSet());
+        return permissionService.listByIds(permissionIds);
+    }
+
+    @Override
+    public List<UserNavVo> queryUserNavByUsername(String username) {
+        List<Permission> permissions = queryUserPermission(username);
+        if( EmptyChecker.isEmpty(permissions) ){
+            return new ArrayList<>();
+        }
+
+        List<UserNavVo> collect = permissions.stream().map(permission -> {
+            UserNavVo userNavVo = new UserNavVo();
+            userNavVo.setName(permission.getComponentName());
+            userNavVo.setParentId(permission.getParentId());
+            userNavVo.setId(permission.getId());
+            userNavVo.setComponent(permission.getComponent());
+            userNavVo.setRedirect(permission.getRedirect());
+            UserNavVo.Meta meta = new UserNavVo.Meta();
+            meta.setIcon(permission.getIcon());
+            meta.setTitle(permission.getComponentName());
+            userNavVo.setMeta(meta);
+            return userNavVo;
+        }).collect(Collectors.toList());
+
+        return collect;
     }
 }

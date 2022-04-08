@@ -14,17 +14,21 @@ import com.cqjtu.mindassess.pojo.req.user.UserSmLoginDto;
 import com.cqjtu.mindassess.pojo.req.user.UserSmRegisterDto;
 import com.cqjtu.mindassess.pojo.vo.user.LoginSuccessVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserInfoVo;
+import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
+import com.cqjtu.mindassess.service.IPermissionService;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
 import com.cqjtu.mindassess.service.ISysUserService;
 import com.cqjtu.mindassess.util.JWTUtil;
 import com.cqjtu.mindassess.util.MD5Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.bouncycastle.math.Primes;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -141,5 +145,14 @@ public class SysUserController {
         String username = (String) StpUtil.getLoginId();
         UserInfoVo userInfoVo = userService.queryUserInfoByUsername(username);
         return ApiResponse.success(userInfoVo);
+    }
+
+
+    @ApiOperation("获取用户Nav")
+    @GetMapping("/nav")
+    public ApiResponse<?> userNav(){
+        String username = (String) StpUtil.getLoginId();
+        List<UserNavVo> userNavVos = userService.queryUserNavByUsername(username);
+        return ApiResponse.success(userNavVos);
     }
 }
