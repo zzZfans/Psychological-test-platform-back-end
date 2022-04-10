@@ -65,6 +65,7 @@ public class ShortMessageCodeService implements IShortMessageCodeService {
     @Override
     public boolean confirmSmCode(String phoneNumber, String code, String scenes) {
         // code=1111 白名单
+        //TODO
         if(code.equals("1111")){
             return true;
         }

@@ -83,4 +83,5 @@ public interface ISysUserService extends IService<User> {
      * @return
      */
     List<UserNavVo> queryUserNavByUsername(String username);
+
 }

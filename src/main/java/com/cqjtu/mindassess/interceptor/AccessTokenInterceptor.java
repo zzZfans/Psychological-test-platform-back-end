@@ -37,6 +37,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        //TODO 完成项目时，删除
         if( StpUtil.isLogin() ){
             return true;
         }
