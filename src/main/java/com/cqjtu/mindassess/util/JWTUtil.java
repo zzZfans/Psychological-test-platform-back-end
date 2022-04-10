@@ -20,7 +20,7 @@ public abstract class JWTUtil {
 
     public static final String DEFAULT_SALT = "defaultSALT";
 
-    public static final Long DEFAULT_TIMEOUT = 604800L;
+    public static final Long DEFAULT_TIMEOUT = 7 * 24 * 60 * 60 * 1000L;
 
     /**
      * 创建一个简单的JWT字符串

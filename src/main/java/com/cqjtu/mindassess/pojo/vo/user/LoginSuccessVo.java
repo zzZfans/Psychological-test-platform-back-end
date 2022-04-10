@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class LoginSuccessVo {
 
-    @ApiModelProperty("token名,作为header或parameter的name")
-    private String tokenName;
+//    @ApiModelProperty("token名,作为header或parameter的name")
+//    private String tokenName;
 
     @ApiModelProperty("token值，作为header或parameter的value")
-    private String tokenValue;
+    private String token;
 }

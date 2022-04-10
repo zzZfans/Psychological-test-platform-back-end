@@ -20,7 +20,7 @@ public class ApiResponse <T> implements Serializable {
     // 业务信息
     private String message;
     // 业务数据
-    private T data;
+    private T result;
     // 响应时间
     private LocalDateTime time;
 
@@ -32,7 +32,7 @@ public class ApiResponse <T> implements Serializable {
         this.success = success;
         this.code = code;
         this.message = message;
-        this.data = data;
+        this.result = data;
         this.time = LocalDateTime.now();
     }
 

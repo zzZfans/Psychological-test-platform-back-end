@@ -1,7 +1,7 @@
 package com.cqjtu.mindassess.enums;
 
 public enum AccessTokenName {
-    ACCESS_TOKEN("X-Token")
+    ACCESS_TOKEN("Access-Token")
     ;
     public String tokenName;
 
