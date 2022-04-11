@@ -1,5 +1,6 @@
 package com.cqjtu.mindassess.pojo.req.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +17,8 @@ import javax.validation.constraints.NotBlank;
 public class UserSmLoginDto {
 
     @ApiModelProperty("登录类型")
-    public Integer type;
+    @JsonProperty
+    public String loginType;
 
     @ApiModelProperty("身份,用户名|手机号码|邮箱")
     @NotBlank(message = "用户身份不能为空")
