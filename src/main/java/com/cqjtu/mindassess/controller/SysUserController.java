@@ -70,7 +70,7 @@ public class SysUserController {
     public static final Integer LOGIN_TYPE_EMAIL_CODE = 2;
 
     @ApiOperation("用户注册")
-    @PostMapping("/register/up")
+    @PostMapping("/register")
     public ApiResponse<?> register(@Validated @RequestBody UserSmRegisterDto dto) {
         /**
          * 业务逻辑：

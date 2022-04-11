@@ -1,6 +1,7 @@
 package com.cqjtu.mindassess.pojo.req.user;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -25,9 +26,11 @@ public class UserSmRegisterDto {
 
     @ApiModelProperty("手机号码")
     @NotBlank(message = "手机号码不能为空")
+    @JsonProperty("mobile")
     private String phoneNumber;
 
     @ApiModelProperty("手机验证码")
     @NotBlank(message = "手机验证码不能为空")
+    @JsonProperty("captcha")
     private String code;
 }
