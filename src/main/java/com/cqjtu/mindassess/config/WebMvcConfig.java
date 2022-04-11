@@ -25,6 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/user/register/**")
                 .excludePathPatterns("/doc.html/**")
                 .excludePathPatterns("/webjars/**")
-                .excludePathPatterns("/swagger-resources/**");
+                .excludePathPatterns("/swagger-resources/**")
+                .excludePathPatterns("/sm/code/**");
     }
 }
