@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@ApiModel("")
+@ApiModel("用户信息")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

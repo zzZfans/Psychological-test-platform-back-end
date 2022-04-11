@@ -37,7 +37,7 @@ public class Permission implements Serializable {
       private String component;
 
       @ApiModelProperty("VUE 组件名（会用作组成 VUE path，需符合 url 规则）")
-      private String componentName;
+      private String routerName;
 
       @ApiModelProperty("VUE 重定向路径")
       private String redirect;

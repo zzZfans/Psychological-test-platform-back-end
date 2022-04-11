@@ -1,10 +1,12 @@
 package com.cqjtu.mindassess.pojo.vo.user;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@ApiModel("登录成功Vo")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
