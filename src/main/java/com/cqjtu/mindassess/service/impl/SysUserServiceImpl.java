@@ -183,14 +183,14 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
 
         List<UserNavVo> collect = permissions.stream().map(permission -> {
             UserNavVo userNavVo = new UserNavVo();
-            userNavVo.setName(permission.getComponentName());
+            userNavVo.setName(permission.getRouterName());
             userNavVo.setParentId(permission.getParentId());
             userNavVo.setId(permission.getId());
             userNavVo.setComponent(permission.getComponent());
             userNavVo.setRedirect(permission.getRedirect());
             UserNavVo.Meta meta = new UserNavVo.Meta();
             meta.setIcon(permission.getIcon());
-            meta.setTitle(permission.getComponentName());
+            meta.setTitle(permission.getRouterName());
             userNavVo.setMeta(meta);
             return userNavVo;
         }).collect(Collectors.toList());

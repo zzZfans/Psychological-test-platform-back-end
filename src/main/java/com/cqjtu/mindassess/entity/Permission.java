@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -76,5 +78,6 @@ public class Permission implements Serializable {
       private LocalDateTime updateTime;
 
       @ApiModelProperty("逻辑删除（更新）（0：未删除 1：删除）")
+      @TableLogic(value = "0",delval = "1")
       private Integer isDeleted;
 }
