@@ -48,8 +48,8 @@ public class ApiResponse <T> implements Serializable {
         return new ApiResponse<>(true,ResponseCode.SUCCESS,data);
     }
 
-    public static <T> ApiResponse<?> success(String msg){
-        return new ApiResponse<>(true,200,msg,null);
+    public static <T> ApiResponse<?> success(int code,String msg){
+        return new ApiResponse<>(true,code,msg,null);
     }
 
     public static <T> ApiResponse<?> success(int code,String message,T data){
@@ -62,5 +62,9 @@ public class ApiResponse <T> implements Serializable {
 
     public static <T> ApiResponse<?> fail(int code,String message,T data) {
         return new ApiResponse<>(false,code,message,data);
+    }
+
+    public static <T> ApiResponse<?> fail(int code,String message) {
+        return new ApiResponse<>(false,code,message,null);
     }
 }
