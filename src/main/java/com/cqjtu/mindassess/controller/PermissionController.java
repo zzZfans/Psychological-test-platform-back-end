@@ -56,7 +56,6 @@ public class PermissionController {
         if( type == PERMISSION_TYPE_MENU ){
             if( EmptyChecker.isEmpty(permissionDto.getPermissionName()) ||
                     EmptyChecker.isEmpty(permissionDto.getParentId()) ||
-            EmptyChecker.isEmpty(permissionDto.getRedirect()) ||
             EmptyChecker.isEmpty(permissionDto.getComponent()) ){
                 throw new BusinessException("权限名,父级权限,路由名,前端组件 为必填");
             }
