@@ -147,13 +147,13 @@ public class SysUserController {
         StpUtil.login(user.getUsername());
         StpUtil.getSession().set("user", user);
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        String tokenName = tokenInfo.getTokenName();
+//        String tokenName = tokenInfo.getTokenName();
         String tokenValue = tokenInfo.getTokenValue();
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(JWT_CLAIM_TOKEN_NAME, tokenName);
-        claims.put(JWT_CLAIM_TOKEN_VALUE, tokenValue);
-        String accessTokenStr = JWTUtil.createSimpleJwtString(claims, JWTUtil.DEFAULT_TIMEOUT, JWTUtil.DEFAULT_SALT);
-        LoginSuccessVo loginSuccessVo = new LoginSuccessVo(accessTokenStr);
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put(JWT_CLAIM_TOKEN_NAME, tokenName);
+//        claims.put(JWT_CLAIM_TOKEN_VALUE, tokenValue);
+//        String accessTokenStr = JWTUtil.createSimpleJwtString(claims, JWTUtil.DEFAULT_TIMEOUT, JWTUtil.DEFAULT_SALT);
+        LoginSuccessVo loginSuccessVo = new LoginSuccessVo(tokenValue);
 
         return ApiResponse.success(loginSuccessVo);
 

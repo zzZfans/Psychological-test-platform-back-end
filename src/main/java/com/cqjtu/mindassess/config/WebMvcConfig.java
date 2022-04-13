@@ -9,7 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * @author zhangning
  */
-@Configuration
+@Deprecated
+//@Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
@@ -21,8 +22,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(accessTokenInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login/**")
-                .excludePathPatterns("/user/register/**")
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/register")
                 .excludePathPatterns("/doc.html/**")
                 .excludePathPatterns("/webjars/**")
                 .excludePathPatterns("/swagger-resources/**")

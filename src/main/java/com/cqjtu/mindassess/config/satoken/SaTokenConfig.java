@@ -24,7 +24,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
     private List<String> excludePath(){
         List<String> excludePath = new ArrayList<>();
         excludePath.add("/user/login");
-        excludePath.add("/register/up");
+        excludePath.add("/user/register");
         return excludePath;
     }
 }

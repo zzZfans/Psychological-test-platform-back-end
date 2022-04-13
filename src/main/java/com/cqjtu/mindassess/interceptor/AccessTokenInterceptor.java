@@ -22,6 +22,7 @@ import java.io.PrintWriter;
  * <p>
  * 访问令牌拦截器，对于要访问对应的接口必须携带token才能访问。
  */
+@Deprecated
 @Slf4j
 public class AccessTokenInterceptor implements HandlerInterceptor {
 
