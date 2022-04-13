@@ -16,10 +16,12 @@ import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.service.IAssessResultService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.util.EmptyChecker;
+import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -91,6 +93,19 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         List<AssessResult> recordExcList = list.stream()
                 .filter(item -> item.getResultLevel() > 0).collect(Collectors.toList());
         result.add(getMonthCount(recordExcList));
+        return result;
+    }
+
+    @Override
+    public List<Integer> getYears() {
+        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        QueryWrapper<AssessResult> wrapper = new QueryWrapper<>();
+        wrapper.lambda().select(AssessResult::getYear).eq(AssessResult::getUserId, userId)
+                .groupBy(AssessResult::getYear);
+        List<Object> objectList = baseMapper.selectObjs(wrapper);
+        List<Integer> result = new ArrayList<>();
+        objectList.forEach(o -> result.add(Integer.parseInt(o.toString())));
+
         return result;
     }
 

@@ -41,4 +41,10 @@ public interface IAssessResultService extends IService<AssessResult> {
      */
     List<List<Integer>> recordCount(RecordCountReq req);
 
+    /**
+     * 获取年份
+     * @return
+     */
+    List<Integer> getYears();
+
 }

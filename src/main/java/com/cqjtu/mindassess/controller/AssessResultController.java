@@ -75,5 +75,12 @@ public class AssessResultController {
         return ApiResponse.success(lists);
     }
 
+    @ApiOperation(value = "获取年份")
+    @GetMapping("/getYears")
+    public ApiResponse<?> getYears() {
+        List<Integer> re = assessResultService.getYears();
+        return ApiResponse.success(re);
+    }
+
 }
 
