@@ -1,12 +1,8 @@
 package com.cqjtu.mindassess.util;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
-import com.baomidou.mybatisplus.generator.config.*;
-import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 
 import java.util.Collections;
@@ -37,7 +33,7 @@ public abstract class GeneratorUtil {
                             .enableSwagger() // 开启 swagger 模式
 //                            .disableOpenDir()
                             .fileOverride() // 覆盖已生成文件
-                            .outputDir("F:\\awesome\\mind-assess\\src\\main\\java"); // 指定输出目录
+                            .outputDir("src/main/java"); // 指定输出目录
                 })
                 .packageConfig(builder -> {
                     builder.parent("com.cqjtu.mindassess") // 设置父包名
@@ -46,10 +42,10 @@ public abstract class GeneratorUtil {
                             .serviceImpl("service.impl")
                             .mapper("mapper")
                             .controller("controller")
-                            .pathInfo(Collections.singletonMap(OutputFile.xml, "F:\\awesome\\mind-assess\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, "src/main/resources/mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("role_permission") // 设置需要生成的表名
+                    builder.addInclude("operation_log") // 设置需要生成的表名
                             .entityBuilder()   // 实体策略配置
                             .idType(IdType.AUTO)
                             .enableLombok()
