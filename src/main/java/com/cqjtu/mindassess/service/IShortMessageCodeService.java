@@ -5,6 +5,7 @@ package com.cqjtu.mindassess.service;
  *
  * 短信验证码服务
  */
+@Deprecated
 public interface IShortMessageCodeService {
 
 
@@ -20,8 +21,9 @@ public interface IShortMessageCodeService {
      * 确认短信验证码
      * @param phoneNumber - 电话号码
      * @param code - 验证码
-     * @param sscenes - 使用场景
+     * @param scenes - 使用场景
      * @return - 验证成功返回true,验证失败返回false
      */
-    boolean confirmSmCode(String phoneNumber,String code,String scenes);
+    boolean
+    confirmSmCode(String phoneNumber,String code,String scenes);
 }

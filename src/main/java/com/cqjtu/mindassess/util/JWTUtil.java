@@ -20,6 +20,9 @@ public abstract class JWTUtil {
 
     public static final String DEFAULT_SALT = "defaultSALT";
 
+    /**
+     * 默认JWT有效实现  一周  单位(毫秒)
+     */
     public static final Long DEFAULT_TIMEOUT = 7 * 24 * 60 * 60 * 1000L;
 
     /**

@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
  *  短信验证码实现类
  */
 
+@Deprecated
 @Slf4j
 @Service
 public class ShortMessageCodeService implements IShortMessageCodeService {
@@ -34,11 +35,16 @@ public class ShortMessageCodeService implements IShortMessageCodeService {
     // 过期时间
     private static final long KEY_EXPIRED_TIME = 10;
 
+    /**
+     * 验证码长度
+     */
+    private static final int CODE_LENGTH = 6;
+
     @Override
     public long requestSmCode(String phoneNumber,String scenes) {
         Random random = new Random(System.nanoTime());
-        StringBuilder code = new StringBuilder(6);
-        for (int i = 0; i < 6; i++) {
+        StringBuilder code = new StringBuilder(CODE_LENGTH);
+        for (int i = 0; i < CODE_LENGTH; i++) {
             code.append(random.nextInt(10));
         }
         String key = phoneNumber + ":" + scenes + ":" + code;

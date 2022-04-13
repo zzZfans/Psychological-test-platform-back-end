@@ -23,9 +23,9 @@ spring:
       pool:
         max-active: 8
         max-wait: -1
-        max-idle: 8
+        max-idle: 20
         min-idle: 0
-    timeout: 5000
+    timeout: 8000
 mybatis-plus:
   type-aliases-package: com.cqjtu.mindassess.entity
   mapper-locations: classpath:*/mapper/**/*.xml
@@ -53,14 +53,14 @@ short-message:
     sdk-appid: 1400644446
     sign: 张宁个人笔记网
     template-ids:
-      - 1355525  # 注册
+      - 1355525  # 注册短信模板id
+      - 1355526  # 登录短信模板id
 # Sa-Token配置
 sa-token:
   # token名称 (同时也是cookie名称)
-
   token-name: Access-Token
   # token有效期，单位s 默认30天, -1代表永不过期 604,800 2592000
-  timeout: 604800000  # 一周
+  timeout: 604800  # 一周
   # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
   activity-timeout: -1
   # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)

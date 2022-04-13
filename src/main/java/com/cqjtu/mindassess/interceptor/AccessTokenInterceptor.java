@@ -19,8 +19,8 @@ import java.io.PrintWriter;
 
 /**
  * @author zhangning
- *
- *  访问令牌拦截器，对于要访问对应的接口必须携带token才能访问。
+ * <p>
+ * 访问令牌拦截器，对于要访问对应的接口必须携带token才能访问。
  */
 @Slf4j
 public class AccessTokenInterceptor implements HandlerInterceptor {
@@ -38,22 +38,22 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         //TODO 完成项目时，删除
-        if( StpUtil.isLogin() ){
+        if (StpUtil.isLogin()) {
             return true;
         }
         String accessToken = request.getHeader(AccessTokenName.ACCESS_TOKEN.tokenName);
-        if( accessToken == null ){
+        if (accessToken == null) {
             accessToken = request.getParameter(AccessTokenName.ACCESS_TOKEN.tokenName);
         }
 
-        if( accessToken == null ){
-            standardJsonMessage(response,"请携带accessToken");
+        if (accessToken == null) {
+            standardJsonMessage(response, "请携带accessToken");
             return false;
         }
 
         Claims claims = JWTUtil.verifyJwt(accessToken, JWTUtil.DEFAULT_SALT);
-        if( claims == null ){
-            standardJsonMessage(response,"请携带合法的accessToken");
+        if (claims == null) {
+            standardJsonMessage(response, "请携带合法的accessToken");
             return false;
         }
 
@@ -63,14 +63,14 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
 
         String key = saTokenName + REDIS_SA_TOKEN_MID_STR + saTokenValue;
         String value = stringRedisTemplate.opsForValue().get(key);
-        if( value == null || value.equals("-4") ){
-            standardJsonMessage(response,"请携带未过期的accessToken");
+        if (value == null || value.equals("-4")) {
+            standardJsonMessage(response, "请携带未过期的accessToken");
             return false;
         }
         return true;
     }
 
-    private void standardJsonMessage(HttpServletResponse response, String message){
+    private void standardJsonMessage(HttpServletResponse response, String message) {
         PrintWriter writer = null;
         response.setContentType("text/html; charset=utf-8");
         response.setCharacterEncoding("utf-8");
@@ -79,10 +79,10 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
             ObjectMapper objectMapper = new ObjectMapper();
             String msg = objectMapper.writeValueAsString(ApiResponse.fail(200, message, null));
             writer.println(msg);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            if( writer !=null ){
+        } finally {
+            if (writer != null) {
                 writer.close();
             }
         }

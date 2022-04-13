@@ -69,7 +69,7 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
         // init user_role Table
         Role role = roleService.queryRoleByName(CREATE_USER_DEFAULT_ROLE);
         if( role == null ){
-            throw new SystemErrorException("系统创建用户时绑定的默认角色错误 不存在该角色:" + DEFAULT_BATCH_SIZE);
+            throw new SystemErrorException("系统创建用户时绑定的默认角色错误 不存在该角色:" + CREATE_USER_DEFAULT_ROLE);
         }
         Long userId = user.getId();
         UserRole userRole = new UserRole();

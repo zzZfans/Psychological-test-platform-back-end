@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
-    public AccessTokenInterceptor accessTokenInterceptor(){
+    public AccessTokenInterceptor accessTokenInterceptor() {
         return new AccessTokenInterceptor();
     }
 
@@ -26,6 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/doc.html/**")
                 .excludePathPatterns("/webjars/**")
                 .excludePathPatterns("/swagger-resources/**")
-                .excludePathPatterns("/sm/code/**");
+                .excludePathPatterns("/sm/code/**")
+                .excludePathPatterns("/captcha");
     }
 }

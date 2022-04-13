@@ -8,6 +8,8 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.User;
+import com.cqjtu.mindassess.enums.CaptchaSceneEnum;
+import com.cqjtu.mindassess.enums.CaptchaTypeEnum;
 import com.cqjtu.mindassess.enums.ShortMessageScenes;
 import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.pojo.req.user.UserSmLoginDto;
@@ -15,6 +17,7 @@ import com.cqjtu.mindassess.pojo.req.user.UserSmRegisterDto;
 import com.cqjtu.mindassess.pojo.vo.user.LoginSuccessVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserInfoVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
+import com.cqjtu.mindassess.service.ICaptchaService;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
 import com.cqjtu.mindassess.service.ISysUserService;
 import com.cqjtu.mindassess.util.EmptyChecker;
@@ -40,6 +43,8 @@ public class SysUserController {
     IShortMessageCodeService smService;
     @Resource
     ISysUserService userService;
+    @Resource
+    ICaptchaService captchaService;
 
 
     /**
@@ -78,13 +83,14 @@ public class SysUserController {
          */
         String registerUsername = dto.getUsername();
         if (userService.queryUserByUsername(registerUsername) != null) {
+
             throw new BusinessException("用户名已经存在");
         }
         String phoneNumber = dto.getPhoneNumber();
         if (userService.queryUserByPhone(phoneNumber) != null) {
             throw new BusinessException("电话号码已被绑定");
         }
-        if (!smService.confirmSmCode(dto.getPhoneNumber(), dto.getCode(), ShortMessageScenes.SM_REGISTER.scenes)) {
+        if (!captchaService.confirmCode(dto.getPhoneNumber(), dto.getCode(),CaptchaTypeEnum.MOBILE, CaptchaSceneEnum.REGISTER)) {
             throw new BusinessException("验证码错误");
         }
         User user = new User();
@@ -122,7 +128,7 @@ public class SysUserController {
             if (EmptyChecker.isEmpty(user)) {
                 throw new BusinessException("该电话号码未注册");
             }
-            boolean success = smService.confirmSmCode(identity, credentials, ShortMessageScenes.SM_LOGIN.scenes);
+            boolean success = captchaService.confirmCode(identity,credentials,CaptchaTypeEnum.MOBILE,CaptchaSceneEnum.LOGIN);
             if (!success) {
                 throw new BusinessException("短信验证码错误");
             }
