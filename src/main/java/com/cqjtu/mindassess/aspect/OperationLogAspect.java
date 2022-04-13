@@ -1,7 +1,9 @@
 package com.cqjtu.mindassess.aspect;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.entity.OperationLog;
+import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.service.IOperationLogService;
 import com.cqjtu.mindassess.util.HttpContextUtils;
 import com.cqjtu.mindassess.util.IPUtils;
@@ -65,8 +67,8 @@ public class OperationLogAspect {
         HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
         operationLog.setIp(IPUtils.getIpAddr(request));
         operationLog.setLink(request.getRequestURL().toString());
-        // todo 如何拿到 userId
-        operationLog.setUserId(1L);
+        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        operationLog.setUserId(userId);
         operationLog.setExecTime((int) time);
         operationLog.setCreateTime(LocalDateTime.now());
         iOperationLogService.save(operationLog);
