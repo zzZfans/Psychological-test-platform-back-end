@@ -3,9 +3,12 @@ package com.cqjtu.mindassess.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqjtu.mindassess.entity.AssessResult;
-import com.cqjtu.mindassess.pojo.req.AssessResultPageReq;
-import com.cqjtu.mindassess.pojo.req.AssessResultReq;
-import com.cqjtu.mindassess.pojo.vo.systeminfo.AssessResultInfo;
+import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
+import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
+import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
+import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
+
+import java.util.List;
 
 /**
  * <p>
@@ -29,6 +32,13 @@ public interface IAssessResultService extends IService<AssessResult> {
      * @param pageReq
      * @return
      */
-    Page<AssessResultInfo> pageList(AssessResultPageReq pageReq);
+    Page<AssessResultResp> pageList(AssessResultPageReq pageReq);
+
+    /**
+     * 测量总量以及异常统计查询
+     * @param req
+     * @return
+     */
+    List<List<Integer>> recordCount(RecordCountReq req);
 
 }

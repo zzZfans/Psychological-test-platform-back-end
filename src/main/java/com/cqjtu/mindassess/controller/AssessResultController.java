@@ -2,17 +2,22 @@ package com.cqjtu.mindassess.controller;
 
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
-import com.cqjtu.mindassess.pojo.req.AssessResultPageReq;
-import com.cqjtu.mindassess.pojo.req.AssessResultReq;
-import com.cqjtu.mindassess.pojo.vo.systeminfo.AssessResultInfo;
+import com.cqjtu.mindassess.entity.User;
+import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
+import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
+import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
+import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.service.IAssessResultService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -50,8 +55,24 @@ public class AssessResultController {
     @PostMapping("/page")
     public ApiResponse<?> page(@RequestBody AssessResultPageReq pageReq) {
 
-        Page<AssessResultInfo> infoPage = assessResultService.pageList(pageReq);
+        Page<AssessResultResp> infoPage = assessResultService.pageList(pageReq);
         return ApiResponse.success(infoPage);
+    }
+
+    @ApiOperation(value = "查询用户个人记录")
+    @PostMapping("/userPage")
+    public ApiResponse<?> userPage(@RequestBody AssessResultPageReq pageReq) {
+        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        pageReq.setUserId(userId);
+        Page<AssessResultResp> infoPage = assessResultService.pageList(pageReq);
+        return ApiResponse.success(infoPage);
+    }
+
+    @ApiOperation(value = "查询用户每月测试以及异常统计查询")
+    @PostMapping("/userRecordList")
+    public ApiResponse<?> userRecordList(@RequestBody RecordCountReq req) {
+        List<List<Integer>> lists = assessResultService.recordCount(req);
+        return ApiResponse.success(lists);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.cqjtu.mindassess.pojo.req;
+package com.cqjtu.mindassess.pojo.req.assess;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,9 +19,9 @@ public class AssessResultPageReq {
     private int page = 1;
     @ApiModelProperty(
             value = "每页记录数，分页查询时传参数，列表查询不需要传",
-            example = "10"
+            example = "5"
     )
-    private int pageSize = 10;
+    private int pageSize = 5;
 
     @ApiModelProperty(value = "用户id")
     private Long userId;

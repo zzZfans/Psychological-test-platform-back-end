@@ -1,4 +1,4 @@
-package com.cqjtu.mindassess.pojo.vo.systeminfo;
+package com.cqjtu.mindassess.pojo.resp.assess;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author zhangzhencheng
  */
 @Data
-public class AssessResultInfo extends AssessResult {
+public class AssessResultResp extends AssessResult {
     /**
      * 主键
      */

@@ -1,4 +1,4 @@
-package com.cqjtu.mindassess.pojo.req;
+package com.cqjtu.mindassess.pojo.req.assess;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
