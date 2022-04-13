@@ -6,18 +6,17 @@ import com.cqjtu.mindassess.entity.Permission;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.pojo.req.permission.PermissionDto;
+import com.cqjtu.mindassess.pojo.vo.PermissionVo;
 import com.cqjtu.mindassess.service.IPermissionService;
 import com.cqjtu.mindassess.util.EmptyChecker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -86,6 +85,13 @@ public class PermissionController {
             return ApiResponse.success(200,"添加成功");
         }
         return ApiResponse.fail(200,"添加失败");
+    }
+
+    @ApiOperation("按照层级关系查询系统所有权限")
+    @GetMapping("/list")
+    public ApiResponse<?> permissionList(){
+        List<PermissionVo> permissionVos = permissionService.queryPermissionWithRelation();
+        return ApiResponse.success(permissionVos);
     }
 
 }
