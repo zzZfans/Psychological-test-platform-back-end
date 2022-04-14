@@ -2,6 +2,7 @@ package com.cqjtu.mindassess.service;
 
 import com.cqjtu.mindassess.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cqjtu.mindassess.pojo.vo.RoleInfoVo;
 
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,17 @@ public interface IRoleService extends IService<Role> {
 
     List<Role> queryRolesByIds(Set<Long> ids);
 
+    /**
+     * 根据roleId，删除role 及其 rolePermission关系
+     * @param roleId
+     */
+    void deleteWithPermission(Long roleId);
 
+
+    /**
+     * 查询角色表的所有Role信息
+     * @return
+     */
+    List<RoleInfoVo> listRoleInfo();
 
 }

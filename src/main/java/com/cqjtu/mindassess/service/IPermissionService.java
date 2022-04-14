@@ -2,6 +2,7 @@ package com.cqjtu.mindassess.service;
 
 import com.cqjtu.mindassess.entity.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cqjtu.mindassess.pojo.vo.PermissionInfoVo;
 import com.cqjtu.mindassess.pojo.vo.PermissionVo;
 
 import java.util.Collection;
@@ -31,5 +32,12 @@ public interface IPermissionService extends IService<Permission> {
      * @return 权限集合
      */
     List<PermissionVo> queryPermissionWithRelation();
+
+
+    /**
+     * 查询所有权限信息集合
+     * @return 权限信息集合
+     */
+    List<PermissionInfoVo> listPermissionInfoVos();
 
 }

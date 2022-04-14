@@ -94,4 +94,12 @@ public class PermissionController {
         return ApiResponse.success(permissionVos);
     }
 
+
+    @ApiOperation("删除权限")
+    @PostMapping("/delete")
+    public ApiResponse<?> permissionDelete(){
+        //TODO 删除权限,需要考虑 删除中间层级权限，parentId字段变化问题
+        return ApiResponse.success();
+    }
+
 }

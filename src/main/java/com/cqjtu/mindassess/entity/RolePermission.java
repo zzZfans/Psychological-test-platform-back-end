@@ -1,8 +1,7 @@
 package com.cqjtu.mindassess.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
@@ -27,7 +26,7 @@ public class RolePermission implements Serializable {
     private static final long serialVersionUID = 1L;
 
       @ApiModelProperty("角色权限关联主键")
-        @TableId(value = "id", type = IdType.AUTO)
+      @TableId(value = "id", type = IdType.AUTO)
       private Long id;
 
       @ApiModelProperty("角色主键")
@@ -37,9 +36,11 @@ public class RolePermission implements Serializable {
       private Long permissionId;
 
       @ApiModelProperty("创建者 id")
+      @TableField(fill = FieldFill.INSERT)
       private Long creatorId;
 
       @ApiModelProperty("更新者 id")
+      @TableField(fill = FieldFill.UPDATE)
       private Long updaterId;
 
       @ApiModelProperty("创建时间")

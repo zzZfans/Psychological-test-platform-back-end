@@ -134,7 +134,7 @@ public class CaptchaServiceImpl implements ICaptchaService {
 
     @Override
     public boolean confirmCode(String recipient, String code, CaptchaTypeEnum captchaType, CaptchaSceneEnum captchaScene) {
-        //TODO
+        //TODO 项目完成后删除
         //白名单 1111,完毕后删除
         if (code.equals("1111")) {
             return true;
