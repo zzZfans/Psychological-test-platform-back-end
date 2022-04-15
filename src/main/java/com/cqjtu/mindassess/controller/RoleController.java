@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -66,50 +64,25 @@ public class RoleController {
     @PostMapping("/saveOrUpdate")
     public ApiResponse<?> saveOrUpdate(@Validated @RequestBody RoleDto dto) {
         //TODO
-        boolean save = ObjectUtils.isEmpty(dto.getId());   // 如果没有携带主键，则为添加
         Role role = new Role();
-        BeanUtils.copyProperties(dto,role);
-        Long userId = ((User) StpUtil.getSession().get("user")).getId();
-        if( save ){
-            roleService.save(role);
-        }else {
-            role.setUpdaterId(userId);
-            roleService.updateById(role);
-        }
-        List<Long> permissionIds = dto.getPermissionIdList();
-        if(ObjectUtils.isEmpty(permissionIds)){
-            return ApiResponse.success();
-        }
-        if (permissionService.queryByIds(permissionIds).size() != permissionIds.size()) {
-            throw new BusinessException("存在系统不存在的权限");
-        }
-
+        BeanUtils.copyProperties(dto, role);
+        roleService.saveOrUpdate(role);
         Long roleId = role.getId();
-        if(save){
-            List<RolePermission> list = new ArrayList<>();
-            for (Long permissionId : permissionIds) {
-                RolePermission rp = new RolePermission();
-                rp.setPermissionId(permissionId);
-                rp.setRoleId(roleId);
-                list.add(rp);
-            }
-            if (rolePermissionService.saveBatch(list)) {
-                return ApiResponse.success();
+        // 该role 所指定的新的permissionId
+        List<Long> newPermissionIds = dto.getPermissionIdList();
+        if( ObjectUtils.isEmpty(newPermissionIds)){
+            return ApiResponse.success();
+        }else{
+            // 验证新指定的是否合法
+            int dbCount = permissionService.count(new LambdaQueryWrapper<Permission>().in(Permission::getId, newPermissionIds));
+            if( dbCount != newPermissionIds.size()){
+                throw new BusinessException("存在不支持的权限");
             }
         }
-        //删除原RolePermission关系
-        rolePermissionService.remove(
-                new LambdaUpdateWrapper<RolePermission>()
-                        .eq(RolePermission::getRoleId,roleId));
-        List<RolePermission> list = new ArrayList<>();
-        for (Long permissionId : permissionIds) {
-            RolePermission rp = new RolePermission();
-            rp.setPermissionId(permissionId);
-            rp.setRoleId(roleId);
-            list.add(rp);
-        }
-        rolePermissionService.saveBatch(list);
-        return ApiResponse.success();
+        // 查询当前角色的关系表
+        List<RolePermission> dbRolePermission = rolePermissionService.list(new LambdaQueryWrapper<RolePermission>().eq(RolePermission::getRoleId, roleId));
+        return null;
+
     }
 
 
@@ -137,7 +110,7 @@ public class RoleController {
     @ApiOperation("根据角色id删除角色")
     @DeleteMapping("/delete/{id}")
     public ApiResponse<?> deleteByRoleId(@PathVariable(value = "id") Long roleId) {
-        if( ObjectUtils.isEmpty(roleService.getById(roleId))){
+        if (ObjectUtils.isEmpty(roleService.getById(roleId))) {
             throw new BusinessException("不存在当前角色");
         }
         roleService.deleteWithPermission(roleId);

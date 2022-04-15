@@ -21,6 +21,7 @@ import java.util.Map;
  * @author zhangning
  *
  */
+@Deprecated
 @Api(tags = {"短信控制器"})
 @RestController
 @RequestMapping("/sm")
