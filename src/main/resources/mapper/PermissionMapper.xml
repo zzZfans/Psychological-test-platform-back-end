@@ -5,11 +5,11 @@
     <resultMap id="permissionInfoVo" type="com.cqjtu.mindassess.pojo.vo.PermissionInfoVo">
         <result property="id" column="id"/>
         <result property="icon" column="icon"/>
-        <result property="permission" column="permission"/>
+        <result property="permission_name" column="permission_name"/>
         <result property="parentId" column="parent_id"/>
     </resultMap>
     <select id="listPermissionInfoVo" resultMap="permissionInfoVo">
-        select id,icon,permission,parent_id
+        select id,icon,permission_name,parent_id
         from permission
         order by sort ASC
     </select>

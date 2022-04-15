@@ -7,7 +7,7 @@ import lombok.Data;
 public class PermissionInfoVo {
     private Long id;
     private String icon;
-    private String permission;
+    private String permission_name;
     private Long parentId;
 
 }
