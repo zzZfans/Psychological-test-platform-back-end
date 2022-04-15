@@ -16,12 +16,13 @@ public class MybatisPlusAutoFIllConfig implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
-        this.strictInsertFill(metaObject, "creatorId",Long.class,userId);
+        this.strictInsertFill(metaObject, "creatorId", Long.class, userId);
+        this.strictInsertFill(metaObject, "updaterId", Long.class, userId);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
-        this.strictUpdateFill(metaObject, "updaterId", Long.class,userId);
+        this.strictUpdateFill(metaObject, "updaterId", Long.class, userId);
     }
 }

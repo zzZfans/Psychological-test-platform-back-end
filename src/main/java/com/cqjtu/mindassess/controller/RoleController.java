@@ -70,18 +70,47 @@ public class RoleController {
         Long roleId = role.getId();
         // 该role 所指定的新的permissionId
         List<Long> newPermissionIds = dto.getPermissionIdList();
-        if( ObjectUtils.isEmpty(newPermissionIds)){
-            return ApiResponse.success();
-        }else{
-            // 验证新指定的是否合法
-            int dbCount = permissionService.count(new LambdaQueryWrapper<Permission>().in(Permission::getId, newPermissionIds));
-            if( dbCount != newPermissionIds.size()){
+        // 验证新指定的是否合法
+        if (newPermissionIds.size() != 0) {
+            int dbCount = permissionService.count(new LambdaQueryWrapper<Permission>().select(Permission::getId).in(Permission::getId, newPermissionIds));
+            if (dbCount != newPermissionIds.size()) {
                 throw new BusinessException("存在不支持的权限");
             }
         }
         // 查询当前角色的关系表
         List<RolePermission> dbRolePermission = rolePermissionService.list(new LambdaQueryWrapper<RolePermission>().eq(RolePermission::getRoleId, roleId));
-        return null;
+        List<Long> dbPermissionIds = dbRolePermission.stream().map(RolePermission::getPermissionId).collect(Collectors.toList());
+        List<Long> newPermissionIdsCopy = new ArrayList<>(newPermissionIds);
+        // 查询没有的权限做增加
+        newPermissionIdsCopy.removeAll(dbPermissionIds);
+        if (newPermissionIdsCopy.size() != 0) {
+            List<RolePermission> rpList = new ArrayList<>();
+            for (Long pId : newPermissionIdsCopy) {
+                RolePermission rp = new RolePermission();
+                rp.setRoleId(roleId);
+                rp.setPermissionId(pId);
+                rpList.add(rp);
+            }
+            rolePermissionService.saveBatch(rpList, rpList.size());
+        }
+        // 原数据库存在而当前不存在的做删除
+        dbPermissionIds = dbRolePermission.stream().map(RolePermission::getPermissionId).collect(Collectors.toList());
+        dbPermissionIds.removeAll(newPermissionIds);
+        if (dbPermissionIds.size() != 0) {
+            //删除
+            List<Long> finalDbPermissionIds = dbPermissionIds;
+            List<Long> deleteIds = dbRolePermission.stream().filter(rolePermission -> {
+                Long pid = rolePermission.getPermissionId();
+                for (Long dbPermissionId : finalDbPermissionIds) {
+                    if (dbPermissionId.equals(pid)) {
+                        return true;
+                    }
+                }
+                return false;
+            }).map(RolePermission::getId).collect(Collectors.toList());
+            rolePermissionService.removeByIds(deleteIds);
+        }
+        return ApiResponse.success();
 
     }
 
