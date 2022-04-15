@@ -5,7 +5,7 @@
     <resultMap id="permissionInfoVo" type="com.cqjtu.mindassess.pojo.vo.PermissionInfoVo">
         <result property="id" column="id"/>
         <result property="icon" column="icon"/>
-        <result property="permission_name" column="permission_name"/>
+        <result property="permissionName" column="permission_name"/>
         <result property="parentId" column="parent_id"/>
     </resultMap>
     <select id="listPermissionInfoVo" resultMap="permissionInfoVo">
