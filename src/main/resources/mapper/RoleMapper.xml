@@ -7,7 +7,7 @@
         <result property="roleName" column="role_name"/>
         <result property="status" column="status"/>
         <result property="description" column="description"/>
-        <result property="creteBy" column="creator"/>
+        <result property="createBy" column="creator"/>
         <result property="updateBy" column="updater"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>

@@ -10,7 +10,7 @@ public class RoleInfoVo {
     private String roleName;
     private Integer status;
     private String description;
-    private String creteBy;
+    private String createBy;
     private String updateBy;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
