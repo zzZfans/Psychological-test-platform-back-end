@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author zhangzhencheng
  */
 @Data
-public class AssessResultResp extends AssessResult {
+public class AssessResultResp {
     /**
      * 主键
      */
@@ -52,4 +52,7 @@ public class AssessResultResp extends AssessResult {
      * 日
      */
     private Integer day;
+
+
+    private LocalDateTime createTime;
 }

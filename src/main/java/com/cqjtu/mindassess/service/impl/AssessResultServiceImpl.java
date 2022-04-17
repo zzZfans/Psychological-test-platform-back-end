@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cqjtu.mindassess.constans.AssessLevelCons;
+import com.cqjtu.mindassess.constans.LevelVoteThresholdCons;
 import com.cqjtu.mindassess.entity.AssessResult;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.mapper.AssessResultMapper;
@@ -13,15 +15,14 @@ import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
 import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
+import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
 import com.cqjtu.mindassess.service.IAssessResultService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.util.EmptyChecker;
-import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -72,7 +73,7 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
     @Override
     public List<List<Integer>> recordCount(RecordCountReq req) {
 
-        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        Long userId = getUserId();
 
         Calendar now = Calendar.getInstance();
         Integer year = now.get(Calendar.YEAR);
@@ -91,14 +92,14 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         result.add(getMonthCount(list));
         //测评中异常总量
         List<AssessResult> recordExcList = list.stream()
-                .filter(item -> item.getResultLevel() > 0).collect(Collectors.toList());
+                .filter(item -> item.getResultLevel() > AssessLevelCons.NORMAL).collect(Collectors.toList());
         result.add(getMonthCount(recordExcList));
         return result;
     }
 
     @Override
     public List<Integer> getYears() {
-        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        Long userId = getUserId();
         QueryWrapper<AssessResult> wrapper = new QueryWrapper<>();
         wrapper.lambda().select(AssessResult::getYear).eq(AssessResult::getUserId, userId)
                 .groupBy(AssessResult::getYear);
@@ -109,26 +110,274 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         return result;
     }
 
-    private List <Integer> getMonthCount(List<AssessResult> list) {
+    @Override
+    public UserAnalysisResp getAnalysis() {
+        Long userId = getUserId();
+
+        //获取近期一个月的情况
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        // 设置为当前时间
+        calendar.setTime(date);
+        // 设置为上一个月
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+        date = calendar.getTime();
+        //上一个月的所有记录,降序排序
+        List<AssessResult> list = list(new LambdaQueryWrapper<AssessResult>().eq(AssessResult::getUserId, userId)
+                .gt(AssessResult::getCreateTime, date).orderByDesc(AssessResult::getCreateTime));
+        //最近没有记录的话直接返回
+        if (list.size() == 0) {
+            return new UserAnalysisResp();
+        }
+        UserAnalysisResp resp = new UserAnalysisResp();
+        Map<String, List<Integer>> allTypeDetail = getAllTypeDetail(list);
+
+
+        Map<String, List<AssessResult>> collect = list.stream().collect(Collectors.groupingBy(
+                AssessResult::getAssessType
+        ));
+        resp = getNearNormalCount(collect, resp);
+        resp = getTerror(collect, resp);
+        resp.setAllTypeDetails(allTypeDetail);
+        resp = getAnalysisDetail(resp, collect);
+
+
+        return resp;
+    }
+
+    /**
+     * 获取所有测评类型记录的详情结果
+     *
+     * @return
+     */
+    private Map<String, List<Integer>> getAllTypeDetail(List<AssessResult> list) {
+        //用于保存用户的记录
+        //key表示测试类型的记录
+        //value表示等级出现的次数,数组的下标表示等级
+        Map<String, List<Integer>> map = new HashMap<>();
+
+        list.forEach(item -> {
+            String key = item.getAssessType();
+            if (map.containsKey(key)) {
+                //测评结果记录的等级
+                Integer level = item.getResultLevel();
+                List<Integer> levelList = map.get(key);
+                //该等级下出现的次数
+                Integer num = levelList.get(level);
+                levelList.set(level, ++num);
+                map.put(item.getAssessType(), levelList);
+            } else {
+                List<Integer> list1 = Arrays.asList(0, 0, 0, 0);
+                Integer level = item.getResultLevel();
+                list1.set(level, 1);
+                map.put(key, list1);
+            }
+        });
+        return map;
+    }
+
+    /**
+     * 获取最近一个月最坏情况的等级以及时间
+     *
+     * @return
+     */
+    private UserAnalysisResp getTerror(Map<String, List<AssessResult>> map, UserAnalysisResp resp) {
+        Map<String, Integer> result = new HashMap<>();
+        Map<String, LocalDateTime> resultTime = new HashMap<>();
+        Map<String, Integer> terrorBackCountMap = new HashMap<>();
+        Iterator<Map.Entry<String, List<AssessResult>>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<AssessResult>> next = iterator.next();
+
+            Integer terrorBackCount = 0;
+            for (AssessResult temp : next.getValue()) {
+                terrorBackCount++;
+                Integer level = temp.getResultLevel();
+                if (!result.containsKey(next.getKey())) {
+                    result.put(next.getKey(), level);
+                    resultTime.put(next.getKey(), temp.getCreateTime());
+                    continue;
+                }
+                Integer tempLevel = result.get(next.getKey());
+                if (level > tempLevel) {
+                    Integer tempBackCount = terrorBackCount - 1;
+                    result.put(next.getKey(), level);
+                    resultTime.put(next.getKey(), temp.getCreateTime());
+                    terrorBackCountMap.put(next.getKey(), tempBackCount);
+                }
+            }
+        }
+        resp.setTerrorTime(resultTime);
+        resp.setNearTerror(result);
+        resp.setNearTerrorBackCount(terrorBackCountMap);
+        return resp;
+    }
+
+
+    /**
+     * 获取最近的正常次数,需要传入分组以后的map
+     * 获取最近一次异常的等级以及时间
+     *
+     * @return
+     */
+    private UserAnalysisResp getNearNormalCount(Map<String, List<AssessResult>> map, UserAnalysisResp resp) {
+        Map<String, Integer> result = new HashMap<>(16);
+        Map<String, LocalDateTime> nearExcTime = new HashMap<>(16);
+        Map<String, Integer> nearExc = new HashMap<>(16);
+        Iterator<Map.Entry<String, List<AssessResult>>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<AssessResult>> next = iterator.next();
+            for (AssessResult temp : next.getValue()) {
+                if (temp.getResultLevel() > AssessLevelCons.NORMAL) {
+                    nearExc.put(next.getKey(), temp.getResultLevel());
+                    nearExcTime.put(next.getKey(), temp.getCreateTime());
+                    if (!result.containsKey(next.getKey())) {
+                        result.put(next.getKey(), 0);
+                    }
+                    break;
+                }
+                if (result.containsKey(next.getKey())) {
+                    Integer num = result.get(next.getKey());
+                    result.put(next.getKey(), ++num);
+                } else {
+                    result.put(next.getKey(), 1);
+                }
+            }
+        }
+        resp.setNearExc(nearExc);
+        resp.setNearExcTIme(nearExcTime);
+        resp.setNearNormalCount(result);
+
+        return resp;
+    }
+
+    /**
+     * 获取分析结果
+     * <p>
+     * 总的分析过程如下
+     * 判断近期最近的最严重的异常状态
+     * 1.若轻度状态 ，需要至少两次的连续检测正常，才能转为正常
+     * 2.若中度异常状态，需要连续三次轻度才能转检测轻度，连续两次正常转正常，
+     * 3.若重度异常状态，需要连续五次中度或以下转中度，连续八次转轻度，十次转正常
+     *
+     * @param resp
+     * @return
+     */
+    private UserAnalysisResp getAnalysisDetail(UserAnalysisResp resp, Map<String, List<AssessResult>> collect) {
+        Map<String, Integer> analysisDetail = new HashMap<>();
+
+
+        //最近一次的异常
+        Map<String, Integer> nearExc = resp.getNearExc();
+
+        Map<String, Integer> nearNormalCount = resp.getNearNormalCount();
+
+        Map<String, Integer> nearTerrorBackCount = resp.getNearTerrorBackCount();
+        //最近的最严重的异常等级
+        Map<String, Integer> nearTerror = resp.getNearTerror();
+        Iterator<Map.Entry<String, Integer>> iterator = nearTerror.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Integer> next = iterator.next();
+            //正常的话直接返回正常
+            if (AssessLevelCons.NORMAL.equals(next.getValue())) {
+                analysisDetail.put(next.getKey(), AssessLevelCons.NORMAL);
+                //轻度情况下,需要两次连续的正常状态，才能转正常
+            } else if (AssessLevelCons.MILD.equals(next.getValue())) {
+                if (nearNormalCount.get(next.getKey()) >= LevelVoteThresholdCons.MILD_TO_NORMAL) {
+                    analysisDetail.put(next.getKey(), AssessLevelCons.NORMAL);
+                } else {
+                    analysisDetail.put(next.getKey(), AssessLevelCons.MILD);
+                }
+                //中度情况下，
+            } else if (AssessLevelCons.MEDIUM.equals(next.getValue())) {
+                //没有三次以上的轻度或正常，判定为中度
+                if (nearTerrorBackCount.get(next.getKey()) < LevelVoteThresholdCons.MEDIUM_TO_MILD) {
+                    analysisDetail.put(next.getKey(), AssessLevelCons.MEDIUM);
+                    //若满足了三次以上的轻度或正常，还需判断，最近连续正常次数两次以上
+                    //若大于,判定为正常,否则为轻度
+                } else if (nearNormalCount.get(next.getKey()) < LevelVoteThresholdCons.MILD_TO_NORMAL) {
+                    analysisDetail.put(next.getKey(), AssessLevelCons.MILD);
+                } else {
+                    analysisDetail.put(next.getKey(), AssessLevelCons.NORMAL);
+                }
+                //重度情况下
+            } else {
+                //需要五次以上才能转为中度
+                if (nearTerrorBackCount.get(next.getKey()) < LevelVoteThresholdCons.SEVERE_TO_MEDIUM) {
+                    analysisDetail.put(next.getKey(), AssessLevelCons.SEVERE);
+                    //最近情况为中度的时候
+                } else if (AssessLevelCons.MEDIUM.equals(nearExc.get(next.getKey()))) {
+                    if (nearNormalCount.get(next.getKey()) > LevelVoteThresholdCons.SEVERE_TO_MEDIUM) {
+                        analysisDetail.put(next.getKey(), AssessLevelCons.NORMAL);
+                    } else if (nearNormalCount.get(next.getKey()) > LevelVoteThresholdCons.MEDIUM_TO_MILD) {
+                        analysisDetail.put(next.getKey(), AssessLevelCons.MILD);
+                    } else {
+                        analysisDetail.put(next.getKey(), AssessLevelCons.MEDIUM);
+                    }
+                    //轻度
+                } else {
+                    List<AssessResult> assessResults = collect.get(next.getKey());
+                    int temp = 0;
+                    boolean flag = false;
+                    for (AssessResult assessResult : assessResults) {
+                        if (assessResult.getResultLevel().equals(AssessLevelCons.MILD)) {
+                            flag = true;
+                        }
+                        if (flag) {
+                            if (assessResult.getResultLevel() <= AssessLevelCons.MILD) {
+                                temp++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    Integer nearTerrorBackNum = resp.getNearTerrorBackCount().get(next.getKey());
+                    Integer nearExcNum = resp.getNearExc().get(next.getKey());
+
+                    //判定结果为重度的情况
+                    if (nearTerrorBackNum < LevelVoteThresholdCons.SEVERE_TO_MEDIUM) {
+                        analysisDetail.put(next.getKey(), AssessLevelCons.SEVERE);
+                        //判定结果为中度的情况
+                    } else if (nearTerrorBackNum < (LevelVoteThresholdCons.SEVERE_TO_MEDIUM + LevelVoteThresholdCons.MEDIUM_TO_MILD)) {
+                        analysisDetail.put(next.getKey(), AssessLevelCons.MEDIUM);
+                        //判定结果为正常的情况
+                    } else if (nearExcNum >= LevelVoteThresholdCons.MILD_TO_NORMAL && temp > LevelVoteThresholdCons.MEDIUM_TO_MILD) {
+                        analysisDetail.put(next.getKey(), AssessLevelCons.NORMAL);
+                        //判定结果为轻度的情况
+                    } else {
+                        analysisDetail.put(next.getKey(), AssessLevelCons.MILD);
+                    }
+                }
+            }
+        }
+        resp.setAnalysisDetails(analysisDetail);
+        return resp;
+    }
+
+    private List<Integer> getMonthCount(List<AssessResult> list) {
         //将每月的总和相加
-        Map<Integer, Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>(16);
         list.forEach(assessResult -> {
             if (map.containsKey(assessResult.getMonth())) {
                 Integer count = map.get(assessResult.getMonth());
                 map.put(assessResult.getMonth(), ++count);
-            }else {
+            } else {
                 map.put(assessResult.getMonth(), 1);
             }
         });
         //获取每月的测试总和
-        List <Integer> everyMonthCount = new ArrayList<>();
+        List<Integer> everyMonthCount = new ArrayList<>();
         for (int i = 1; i <= 12; i++) {
             if (map.containsKey(i)) {
                 everyMonthCount.add(map.get(i));
-            }else {
+            } else {
                 everyMonthCount.add(0);
             }
         }
         return everyMonthCount;
+    }
+
+    private Long getUserId() {
+        return ((User) StpUtil.getSession().get("user")).getId();
     }
 }

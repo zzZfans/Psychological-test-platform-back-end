@@ -10,6 +10,7 @@ import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
 import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
+import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
 import com.cqjtu.mindassess.service.IAssessResultService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -79,6 +81,13 @@ public class AssessResultController {
     @GetMapping("/getYears")
     public ApiResponse<?> getYears() {
         List<Integer> re = assessResultService.getYears();
+        return ApiResponse.success(re);
+    }
+
+    @ApiOperation(value = "获取个人状况分析")
+    @GetMapping("/getAnalysis")
+    public ApiResponse<?> getAnalysis() {
+        UserAnalysisResp re = assessResultService.getAnalysis();
         return ApiResponse.success(re);
     }
 

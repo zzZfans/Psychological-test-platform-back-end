@@ -7,8 +7,10 @@ import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
 import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
+import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -46,5 +48,11 @@ public interface IAssessResultService extends IService<AssessResult> {
      * @return
      */
     List<Integer> getYears();
+
+    /**
+     * 个人状态分析
+     * @return
+     */
+    UserAnalysisResp getAnalysis();
 
 }
