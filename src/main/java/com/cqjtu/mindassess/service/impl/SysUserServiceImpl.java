@@ -191,7 +191,7 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
             userNavVo.setRedirect(permission.getRedirect());
             UserNavVo.Meta meta = new UserNavVo.Meta();
             meta.setIcon(permission.getIcon());
-            meta.setTitle(permission.getRouterName());
+            meta.setTitle(permission.getPermissionName());
             userNavVo.setMeta(meta);
             return userNavVo;
         }).collect(Collectors.toList());
