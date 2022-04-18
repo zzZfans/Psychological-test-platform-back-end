@@ -36,7 +36,7 @@ public class PermissionVo {
     private String permission;
 
     @ApiModelProperty("权限类型")
-    private String permissionType;
+    private Integer permissionType;
 
     @ApiModelProperty("状态,0禁用，1启用")
     private Integer status;
