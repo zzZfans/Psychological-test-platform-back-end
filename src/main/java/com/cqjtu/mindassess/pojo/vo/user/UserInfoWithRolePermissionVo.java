@@ -1,6 +1,5 @@
 package com.cqjtu.mindassess.pojo.vo.user;
 
-import com.cqjtu.mindassess.entity.Role;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UserInfoVo {
+public class UserInfoWithRolePermissionVo {
 
     @ApiModelProperty("主键")
     private Long id;

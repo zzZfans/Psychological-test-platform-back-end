@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqjtu.mindassess.entity.Permission;
 import com.cqjtu.mindassess.entity.Role;
 import com.cqjtu.mindassess.entity.User;
-import com.cqjtu.mindassess.pojo.vo.user.UserInfoVo;
+import com.cqjtu.mindassess.pojo.vo.user.UserInfoWithRolePermissionVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
+import com.cqjtu.mindassess.pojo.vo.user.UserPageVo;
 
 import java.util.List;
 
@@ -58,7 +59,7 @@ public interface ISysUserService extends IService<User> {
      * @param username - 用户名
      * @return 用户信息
      */
-    UserInfoVo queryUserInfoByUsername(String username);
+    UserInfoWithRolePermissionVo queryUserInfoByUsername(String username);
 
 
     /**

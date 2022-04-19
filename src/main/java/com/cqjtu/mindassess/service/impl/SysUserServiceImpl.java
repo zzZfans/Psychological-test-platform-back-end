@@ -7,7 +7,7 @@ import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.exception.SystemErrorException;
 import com.cqjtu.mindassess.mapper.UserMapper;
 import com.cqjtu.mindassess.pojo.vo.user.RoleInfo;
-import com.cqjtu.mindassess.pojo.vo.user.UserInfoVo;
+import com.cqjtu.mindassess.pojo.vo.user.UserInfoWithRolePermissionVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
 import com.cqjtu.mindassess.service.*;
 import com.cqjtu.mindassess.util.EmptyChecker;
@@ -91,13 +91,13 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
     }
 
     @Override
-    public UserInfoVo queryUserInfoByUsername(String username) {
+    public UserInfoWithRolePermissionVo queryUserInfoByUsername(String username) {
         User user = queryUserByUsername(username);
         if (EmptyChecker.isEmpty(user)) {
             throw new BusinessException("用户不存在");
         }
 
-        UserInfoVo userInfoVo = new UserInfoVo();
+        UserInfoWithRolePermissionVo userInfoVo = new UserInfoWithRolePermissionVo();
         BeanUtils.copyProperties(user, userInfoVo);
 
         Long userId = user.getId();
