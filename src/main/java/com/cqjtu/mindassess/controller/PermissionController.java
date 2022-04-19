@@ -6,12 +6,16 @@ import com.cqjtu.mindassess.entity.Permission;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.pojo.req.permission.PermissionDto;
+import com.cqjtu.mindassess.pojo.req.permission.PermissionUpdateDto;
 import com.cqjtu.mindassess.pojo.vo.PermissionVo;
 import com.cqjtu.mindassess.service.IPermissionService;
 import com.cqjtu.mindassess.util.EmptyChecker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.simpleframework.xml.core.Validate;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,6 +104,22 @@ public class PermissionController {
     public ApiResponse<?> permissionDelete(){
         //TODO 删除权限,需要考虑 删除中间层级权限，parentId字段变化问题
         return ApiResponse.success();
+    }
+
+    @ApiOperation("修改权限")
+    @PostMapping("/update")
+    public ApiResponse<?> permissionUpdate(@Validated @RequestBody PermissionUpdateDto dto){
+        Permission entity = new Permission();
+        BeanUtils.copyProperties(dto,entity);
+        Long pId = entity.getId();
+        if(ObjectUtils.isEmpty(permissionService.getById(pId))){
+            return ApiResponse.fail(200,"不存在主键为[" + pId + "]的权限");
+        }
+        boolean success = permissionService.updateById(entity);
+        if(success){
+            return ApiResponse.success();
+        }
+        return ApiResponse.fail(200,"修改失败");
     }
 
 }
