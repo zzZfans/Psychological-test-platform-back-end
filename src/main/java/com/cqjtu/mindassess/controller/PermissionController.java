@@ -1,17 +1,22 @@
 package com.cqjtu.mindassess.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.Permission;
+import com.cqjtu.mindassess.entity.RolePermission;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.pojo.req.permission.PermissionDto;
 import com.cqjtu.mindassess.pojo.req.permission.PermissionUpdateDto;
 import com.cqjtu.mindassess.pojo.vo.PermissionVo;
 import com.cqjtu.mindassess.service.IPermissionService;
+import com.cqjtu.mindassess.service.IRolePermissionService;
 import com.cqjtu.mindassess.util.EmptyChecker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Delete;
 import org.simpleframework.xml.core.Validate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +42,8 @@ public class PermissionController {
 
     @Resource
     IPermissionService permissionService;
+    @Resource
+    IRolePermissionService rolePermissionService;
 
 
     /**
@@ -100,10 +107,20 @@ public class PermissionController {
 
 
     @ApiOperation("删除权限")
-    @PostMapping("/delete")
-    public ApiResponse<?> permissionDelete(){
-        //TODO 删除权限,需要考虑 删除中间层级权限，parentId字段变化问题
-        return ApiResponse.success();
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<?> permissionDelete(@PathVariable("id") Long id){
+        // 1.判断要删除的权限是否存在
+        if( ObjectUtils.isEmpty(permissionService.getById(id))){
+            return ApiResponse.fail(200,"不存在该权限");
+        }
+        // 2.判断该权限是否存在子权限
+        List<Permission> child = permissionService.list(new LambdaQueryWrapper<Permission>().eq(Permission::getParentId, id));
+        if(ObjectUtils.isEmpty(child) && permissionService.removeById(id)){
+            // 3.删除rolePermission表中 与当前permissionId 存在关系的记录
+            rolePermissionService.remove(new LambdaUpdateWrapper<RolePermission>().eq(RolePermission::getPermissionId,id));
+            return ApiResponse.success();
+        }
+        return ApiResponse.fail(200,"不允许删除还存在子权限的权限");
     }
 
     @ApiOperation("修改权限")
