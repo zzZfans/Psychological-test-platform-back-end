@@ -20,5 +20,6 @@
                            on r.creator_id=u1.id
                  left join `user` u2
                            on r.updater_id=u2.id
+        where r.is_deleted = 0
     </select>
 </mapper>

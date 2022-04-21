@@ -11,6 +11,7 @@
     <select id="listPermissionInfoVo" resultMap="permissionInfoVo">
         select id,icon,permission_name,parent_id
         from permission
+        where is_deleted = 0
         order by sort ASC
     </select>
 </mapper>

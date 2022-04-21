@@ -1,9 +1,7 @@
 package com.cqjtu.mindassess.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
@@ -54,6 +52,7 @@ public class Role implements Serializable {
       private LocalDateTime updateTime;
 
       @ApiModelProperty("逻辑删除（更新）（0：未删除 1：删除）")
+      @TableLogic(value = "0",delval = "1")
       private Integer isDeleted;
 
 
