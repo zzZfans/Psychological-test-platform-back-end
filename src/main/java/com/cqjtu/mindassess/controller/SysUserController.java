@@ -197,7 +197,7 @@ public class SysUserController {
     @ApiOperation("分页查询")
     @PostMapping("/list")
     public ApiResponse<?> userList(@RequestParam("current") Long current,
-                                   @RequestParam("size") Long size,
+                                   @RequestParam("pageSize") Long size,
                                    @Validated @RequestBody UserPagingConditionDto conditionDto) {
         Page<User> page = userService.page(new Page<User>(current, size),
                 new LambdaQueryWrapper<User>()
