@@ -22,7 +22,7 @@ public class AssessResultReq {
 
     @ApiModelProperty(value = "用户名称" ,required = true)
     @NotNull(message = "用户名称不能为空")
-    private String userName;
+    private String username;
 
     @ApiModelProperty(value = "测评类型" ,required = true)
     @NotBlank(message = "测评类型不能为空")

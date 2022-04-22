@@ -9,8 +9,10 @@ import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
 import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
+import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
+import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
 import com.cqjtu.mindassess.service.IAssessResultService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -89,6 +90,13 @@ public class AssessResultController {
     public ApiResponse<?> getAnalysis() {
         UserAnalysisResp re = assessResultService.getAnalysis();
         return ApiResponse.success(re);
+    }
+
+    @ApiOperation(value = "获取用户测试记录列表")
+    @PostMapping("/getUserAssessRecord")
+    public ApiResponse<?> getUserAssessRecord(@RequestBody UserAssessRecordPageReq req) {
+        Page<UserAssessResp> userAssessRecord = assessResultService.getUserAssessRecord(req);
+        return ApiResponse.success(userAssessRecord);
     }
 
 }

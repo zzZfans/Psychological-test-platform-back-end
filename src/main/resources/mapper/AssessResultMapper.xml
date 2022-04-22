@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cqjtu..mindassess.mapper.AssessResultMapper">
+<mapper namespace="com.cqjtu.mindassess.mapper.AssessResultMapper">
 
+    <resultMap id="userAssess" type="com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp">
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="sex" column="sex"/>
+        <result property="nearAssessTime" column="nearAssessTime"/>
+    </resultMap>
+    <select id="getUserAssessPage" resultMap="userAssess">
+        select user.username,user.phone_number,user.sex,a.user_id,a.create_time nearAssessTime
+        from user,
+             (select user_id,max(create_time) create_time,max(result_level) maxLv from assess_result GROUP BY user_id) a
+        where user.id = a.user_id and maxLv > 0
+        <if test="req.sex != null and req.sex!=''">
+              and user.sex = #{req.sex}
+        </if>
+        <if test="req.userName != null and req.userName!=''">
+              and user.username like concat('%',#{req.username}, '%')
+        </if>
+    </select>
 </mapper>

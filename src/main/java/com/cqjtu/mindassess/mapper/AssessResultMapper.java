@@ -1,7 +1,11 @@
 package com.cqjtu.mindassess.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.entity.AssessResult;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
+import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -12,5 +16,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2022-04-06
  */
 public interface AssessResultMapper extends BaseMapper<AssessResult> {
+
+    /**
+     * 获取以及测试了的用户列表
+     * @param page
+     * @param req
+     * @return
+     */
+    Page<UserAssessResp> getUserAssessPage(Page<?> page, @Param("req") UserAssessRecordPageReq req);
 
 }

@@ -6,8 +6,10 @@ import com.cqjtu.mindassess.entity.AssessResult;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
 import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
+import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
+import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
 
 import java.util.List;
 import java.util.Map;
@@ -54,5 +56,12 @@ public interface IAssessResultService extends IService<AssessResult> {
      * @return
      */
     UserAnalysisResp getAnalysis();
+
+    /**
+     * 获取用户测试记录列表
+     * @param req
+     * @return
+     */
+    Page<UserAssessResp> getUserAssessRecord(UserAssessRecordPageReq req);
 
 }

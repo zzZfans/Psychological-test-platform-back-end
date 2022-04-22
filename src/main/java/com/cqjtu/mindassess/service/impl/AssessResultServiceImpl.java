@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.constans.AssessLevelCons;
 import com.cqjtu.mindassess.constans.LevelVoteThresholdCons;
 import com.cqjtu.mindassess.entity.AssessResult;
@@ -14,10 +15,11 @@ import com.cqjtu.mindassess.mapper.AssessResultMapper;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
 import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
+import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
+import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
 import com.cqjtu.mindassess.service.IAssessResultService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.util.EmptyChecker;
 import org.springframework.stereotype.Service;
 
@@ -131,8 +133,6 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         }
         UserAnalysisResp resp = new UserAnalysisResp();
         Map<String, List<Integer>> allTypeDetail = getAllTypeDetail(list);
-
-
         Map<String, List<AssessResult>> collect = list.stream().collect(Collectors.groupingBy(
                 AssessResult::getAssessType
         ));
@@ -143,6 +143,13 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
 
 
         return resp;
+    }
+
+    @Override
+    public Page<UserAssessResp> getUserAssessRecord(UserAssessRecordPageReq req) {
+        Page<AssessResult> page = new Page<>(req.getPage(), req.getPageSize());
+        Page<UserAssessResp> userAssessPage = baseMapper.getUserAssessPage(page, req);
+        return userAssessPage;
     }
 
     /**
@@ -275,9 +282,7 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         Map<String, Integer> nearTerrorBackCount = resp.getNearTerrorBackCount();
         //最近的最严重的异常等级
         Map<String, Integer> nearTerror = resp.getNearTerror();
-        Iterator<Map.Entry<String, Integer>> iterator = nearTerror.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Integer> next = iterator.next();
+        for (Map.Entry<String, Integer> next : nearTerror.entrySet()) {
             //正常的话直接返回正常
             if (AssessLevelCons.NORMAL.equals(next.getValue())) {
                 analysisDetail.put(next.getKey(), AssessLevelCons.NORMAL);

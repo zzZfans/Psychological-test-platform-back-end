@@ -35,7 +35,7 @@ public class AssessResult implements Serializable {
     private Long userId;
 
     @ApiModelProperty("用户名称")
-    private String userName;
+    private String username;
 
     @ApiModelProperty("测试类型")
     private String assessType;
