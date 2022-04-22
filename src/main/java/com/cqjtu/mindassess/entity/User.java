@@ -1,6 +1,7 @@
 package com.cqjtu.mindassess.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,5 +45,6 @@ public class User implements Serializable {
     private LocalDateTime updateTime;
     @TableField("is_deleted")
     @TableLogic(value = "0",delval = "1")
+    @JsonIgnore
     private Integer isDeleted;
 }

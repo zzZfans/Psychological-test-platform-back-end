@@ -6,22 +6,23 @@ import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.enums.CaptchaSceneEnum;
 import com.cqjtu.mindassess.enums.CaptchaTypeEnum;
-import com.cqjtu.mindassess.enums.ShortMessageScenes;
 import com.cqjtu.mindassess.exception.BusinessException;
+import com.cqjtu.mindassess.pojo.req.user.UserPagingConditionDto;
 import com.cqjtu.mindassess.pojo.req.user.UserSmLoginDto;
 import com.cqjtu.mindassess.pojo.req.user.UserSmRegisterDto;
 import com.cqjtu.mindassess.pojo.vo.user.LoginSuccessVo;
-import com.cqjtu.mindassess.pojo.vo.user.UserInfoVo;
+import com.cqjtu.mindassess.pojo.vo.user.UserInfoWithRolePermissionVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
+import com.cqjtu.mindassess.pojo.vo.user.UserPageVo;
 import com.cqjtu.mindassess.service.ICaptchaService;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
 import com.cqjtu.mindassess.service.ISysUserService;
 import com.cqjtu.mindassess.util.EmptyChecker;
-import com.cqjtu.mindassess.util.JWTUtil;
 import com.cqjtu.mindassess.util.MD5Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,9 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Api(tags = {"用户控制器"})
@@ -90,7 +89,7 @@ public class SysUserController {
         if (userService.queryUserByPhone(phoneNumber) != null) {
             throw new BusinessException("电话号码已被绑定");
         }
-        if (!captchaService.confirmCode(dto.getPhoneNumber(), dto.getCode(),CaptchaTypeEnum.MOBILE, CaptchaSceneEnum.REGISTER)) {
+        if (!captchaService.confirmCode(dto.getPhoneNumber(), dto.getCode(), CaptchaTypeEnum.MOBILE, CaptchaSceneEnum.REGISTER)) {
             throw new BusinessException("验证码错误");
         }
         User user = new User();
@@ -128,7 +127,7 @@ public class SysUserController {
             if (EmptyChecker.isEmpty(user)) {
                 throw new BusinessException("该电话号码未注册");
             }
-            boolean success = captchaService.confirmCode(identity,credentials,CaptchaTypeEnum.MOBILE,CaptchaSceneEnum.LOGIN);
+            boolean success = captchaService.confirmCode(identity, credentials, CaptchaTypeEnum.MOBILE, CaptchaSceneEnum.LOGIN);
             if (!success) {
                 throw new BusinessException("短信验证码错误");
             }
@@ -182,7 +181,7 @@ public class SysUserController {
     @GetMapping("/info")
     public ApiResponse<?> userInfo() {
         String username = (String) StpUtil.getLoginId();
-        UserInfoVo userInfoVo = userService.queryUserInfoByUsername(username);
+        UserInfoWithRolePermissionVo userInfoVo = userService.queryUserInfoByUsername(username);
         return ApiResponse.success(userInfoVo);
     }
 
@@ -193,5 +192,22 @@ public class SysUserController {
         String username = (String) StpUtil.getLoginId();
         List<UserNavVo> userNavVos = userService.queryUserNavByUsername(username);
         return ApiResponse.success(userNavVos);
+    }
+
+    @ApiOperation("分页查询")
+    @PostMapping("/list")
+    public ApiResponse<?> userList(@RequestParam("current") Long current,
+                                   @RequestParam("pageSize") Long size,
+                                   @Validated @RequestBody UserPagingConditionDto conditionDto) {
+        Page<User> page = userService.page(new Page<User>(current, size),
+                new LambdaQueryWrapper<User>()
+                        .eq(EmptyChecker.notEmpty(conditionDto.getUsername()), User::getUsername, conditionDto.getUsername())
+                        .eq(EmptyChecker.notEmpty(conditionDto.getStatus()), User::getStatus, conditionDto.getStatus()));
+        List<User> records = page.getRecords();
+        Long total = page.getTotal();
+        UserPageVo userPageVo = new UserPageVo();
+        userPageVo.setRecords(records);
+        userPageVo.setTotal(total);
+        return ApiResponse.success(userPageVo);
     }
 }

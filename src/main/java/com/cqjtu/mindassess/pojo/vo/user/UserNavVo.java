@@ -31,7 +31,7 @@ public class UserNavVo {
     public static class Meta{
         @ApiModelProperty("菜单图标")
         private String icon;
-        @ApiModelProperty("")
+        @ApiModelProperty("permissionName")
         private String title;
     }
 }

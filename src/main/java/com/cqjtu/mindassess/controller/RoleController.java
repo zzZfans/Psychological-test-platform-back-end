@@ -128,8 +128,14 @@ public class RoleController {
                 .map(RolePermission::getPermissionId)
                 .collect(Collectors.toList());
 
+        if( ObjectUtils.isEmpty(permissionIds)){
+            List<Permission> list = new ArrayList<>();
+            return ApiResponse.success(list);
+        }
+
         List<Permission> list = permissionService.list(
                 new LambdaQueryWrapper<Permission>()
+                        .in(Permission::getId,permissionIds)
                         .orderByAsc(Permission::getSort));
 
         List<Long> sortedPermissionIds = list.stream().map(Permission::getId).collect(Collectors.toList());
