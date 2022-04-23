@@ -29,6 +29,8 @@ public class User implements Serializable {
     private Integer sex;
     @TableField("date_of_birth")
     private LocalDateTime dateOfBirth;
+    @TableField("avatar")
+    private String avatar;
     @TableField("face_recognition_source")
     private String faceRecognitionSource;
     @TableField("last_login_ip")
