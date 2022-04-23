@@ -15,5 +15,5 @@ import java.util.Map;
  * @since 2022-04-13
  */
 public interface IOperationLogService extends IService<OperationLog> {
-    IPage<OperationLog> selectPage(Map<String, Object> params, OperationLog operationLog);
+    IPage<OperationLog> selectPage(Map<String, Object> params, Map<String,String> condition);
 }
