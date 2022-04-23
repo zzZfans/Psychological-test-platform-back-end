@@ -221,10 +221,10 @@ public class SysUserController {
         return ApiResponse.success(userPageVo);
     }
 
+    // MinIO存储，User表更新
     @ApiOperation("头像上传")
     @PostMapping("/avatar/upload")
     public ApiResponse<?> avatarUpload(MultipartFile multipartFile) {
-        // MinIO存储，User表更新
         if (ObjectUtils.isEmpty(multipartFile)) return ApiResponse.fail(200, "文件不能为空");
 
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
@@ -238,5 +238,24 @@ public class SysUserController {
             return ApiResponse.success(accessURL);
         }
         return ApiResponse.fail(200, "头像上传失败");
+    }
+
+    // MinIO上传，User表更新
+    @ApiOperation("用户人脸源图上传")
+    @PostMapping("/face/upload")
+    public ApiResponse<?> faceUpload(MultipartFile multipartFile) {
+        if (ObjectUtils.isEmpty(multipartFile)) return ApiResponse.fail(200, "人脸识别源图不能为空");
+
+        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        String accessURL = fileService.fileUpload(multipartFile);
+
+        boolean success = userService.update(
+                new LambdaUpdateWrapper<User>()
+                        .set(true, User::getFaceRecognitionSource, accessURL)
+                        .eq(true, User::getId, userId));
+        if (success) {
+            return ApiResponse.success(accessURL);
+        }
+        return ApiResponse.fail(200, "上传失败");
     }
 }
