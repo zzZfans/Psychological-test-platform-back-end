@@ -25,6 +25,7 @@ import com.cqjtu.mindassess.service.IFileService;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
 import com.cqjtu.mindassess.service.ISysUserService;
 import com.cqjtu.mindassess.util.EmptyChecker;
+import com.cqjtu.mindassess.util.IPUtils;
 import com.cqjtu.mindassess.util.MD5Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -168,11 +169,11 @@ public class SysUserController {
         LoginSuccessVo loginSuccessVo = new LoginSuccessVo(tokenValue);
 
         // User表记录用户登录信息
-        String loginHost = request.getRemoteHost();
+        String loginIp = IPUtils.getIpAddr(request);
         LocalDateTime loginTime = LocalDateTime.now();
 
         userService.update(new LambdaUpdateWrapper<User>()
-                .set(User::getLastLoginIp,loginHost)
+                .set(User::getLastLoginIp,loginIp)
                 .set(User::getLastLoginTime,loginTime)
                 .eq(User::getId,user.getId()));
 
