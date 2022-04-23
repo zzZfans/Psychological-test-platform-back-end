@@ -62,7 +62,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     private void queryChildren(PermissionVo v) {
         Long parentId = v.getId();
         List<Permission> list = list(new LambdaQueryWrapper<Permission>()
-                .eq(Permission::getParentId, parentId));
+                .eq(Permission::getParentId, parentId)
+                .orderByAsc(Permission::getSort));
 
         if (ObjectUtils.isEmpty(list)) {
             return;
