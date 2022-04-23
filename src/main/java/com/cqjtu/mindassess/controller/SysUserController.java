@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -118,13 +120,14 @@ public class SysUserController {
 
     @ApiOperation("用户登录")
     @PostMapping("/login")
-    public ApiResponse<?> login(@Validated @RequestBody UserSmLoginDto dto) {
+    public ApiResponse<?> login(@Validated @RequestBody UserSmLoginDto dto, HttpServletRequest request) {
         /**
          * 业务逻辑：
          *  1.用户名 与 密码加盐  验证
          *  2.手机验证码验证
          *  2.satoken登录
-         *  3.返回token
+         *  3.数据记录User表登录信息
+         *  4.返回token
          */
         String loginType = dto.getLoginType();
         String identity = dto.getIdentity();
@@ -163,6 +166,15 @@ public class SysUserController {
 //        claims.put(JWT_CLAIM_TOKEN_VALUE, tokenValue);
 //        String accessTokenStr = JWTUtil.createSimpleJwtString(claims, JWTUtil.DEFAULT_TIMEOUT, JWTUtil.DEFAULT_SALT);
         LoginSuccessVo loginSuccessVo = new LoginSuccessVo(tokenValue);
+
+        // User表记录用户登录信息
+        String loginHost = request.getRemoteHost();
+        LocalDateTime loginTime = LocalDateTime.now();
+
+        userService.update(new LambdaUpdateWrapper<User>()
+                .set(User::getLastLoginIp,loginHost)
+                .set(User::getLastLoginTime,loginTime)
+                .eq(User::getId,user.getId()));
 
         return ApiResponse.success(loginSuccessVo);
 
