@@ -6,6 +6,7 @@ import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.User;
@@ -20,14 +21,17 @@ import com.cqjtu.mindassess.pojo.vo.user.UserInfoWithRolePermissionVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserPageVo;
 import com.cqjtu.mindassess.service.ICaptchaService;
+import com.cqjtu.mindassess.service.IFileService;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
 import com.cqjtu.mindassess.service.ISysUserService;
 import com.cqjtu.mindassess.util.EmptyChecker;
 import com.cqjtu.mindassess.util.MD5Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -44,12 +48,15 @@ public class SysUserController {
     ISysUserService userService;
     @Resource
     ICaptchaService captchaService;
+    @Resource
+    IFileService fileService;
 
 
     /**
      * 用于JWT签发的字符串中 claim中携带的 saTokenName
      */
     public static final String JWT_CLAIM_TOKEN_NAME = "sa-tokenName";
+
 
     /**
      * 用于JWT签发的字符串中 claim中携带的 saTokenValue
@@ -65,10 +72,13 @@ public class SysUserController {
      * 电话号码 手机验证码登录方式
      */
     public static final String LOGIN_TYPE_PHONE_CODE = "mobile";
+
+
     /**
      * 电子邮箱 邮箱验证码登录方式
      */
     public static final String LOGIN_TYPE_EMAIL_CODE = "email";
+
 
     @ApiOperation("用户注册")
     @PostMapping("/register")
@@ -209,5 +219,24 @@ public class SysUserController {
         userPageVo.setRecords(records);
         userPageVo.setTotal(total);
         return ApiResponse.success(userPageVo);
+    }
+
+    @ApiOperation("头像上传")
+    @PostMapping("/avatar/upload")
+    public ApiResponse<?> avatarUpload(MultipartFile multipartFile) {
+        // MinIO存储，User表更新
+        if (ObjectUtils.isEmpty(multipartFile)) return ApiResponse.fail(200, "文件不能为空");
+
+        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        String accessURL = fileService.fileUpload(multipartFile);
+
+        boolean success = userService.update(
+                new LambdaUpdateWrapper<User>()
+                        .set(true, User::getAvatar, accessURL)
+                        .eq(true, User::getId, userId));
+        if (success) {
+            return ApiResponse.success(accessURL);
+        }
+        return ApiResponse.fail(200, "头像上传失败");
     }
 }
