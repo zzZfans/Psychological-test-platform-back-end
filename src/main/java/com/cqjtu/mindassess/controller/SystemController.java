@@ -57,8 +57,8 @@ public class SystemController {
     @LogOperation("查看系统操作日志")
     @ApiOperation("查看系统操作日志")
     public ApiResponse<?> getOperationLogList(@RequestParam Map<String, Object> params,
-                                              @RequestBody OperationLog operationLog) {
-        IPage<OperationLog> operationLogIPage = iOperationLogService.selectPage(params, operationLog);
+                                              @RequestBody Map<String,String> condition) {
+        IPage<OperationLog> operationLogIPage = iOperationLogService.selectPage(params, condition);
         List<OperationLog> records = operationLogIPage.getRecords();
         List<Long> userIds = records.stream().map(OperationLog::getUserId).collect(Collectors.toList());
 
@@ -84,7 +84,7 @@ public class SystemController {
             opVos.add(opVo);
         }
         result.setRecords(opVos);
-        return ApiResponse.success(opVos);
+        return ApiResponse.success(result);
 
     }
 }
