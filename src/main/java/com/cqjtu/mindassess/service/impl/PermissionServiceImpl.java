@@ -9,6 +9,7 @@ import com.cqjtu.mindassess.pojo.vo.PermissionVo;
 import com.cqjtu.mindassess.service.IPermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.service.ISysUserService;
+import com.cqjtu.mindassess.util.EmptyChecker;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -37,7 +38,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Override
     public Set<Permission> queryByIds(Collection<Long> ids) {
-        return new HashSet<>(listByIds(ids));
+        List<Permission> list = list(new LambdaQueryWrapper<Permission>().in(EmptyChecker.notEmpty(ids), Permission::getId, ids));
+        return new HashSet<>(list);
     }
 
     @Override
