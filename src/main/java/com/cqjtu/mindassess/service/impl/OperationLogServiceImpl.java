@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.entity.OperationLog;
+import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.mapper.OperationLogMapper;
 import com.cqjtu.mindassess.service.IOperationLogService;
+import com.cqjtu.mindassess.service.ISysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -23,19 +26,23 @@ import java.util.Map;
 @Service
 public class OperationLogServiceImpl extends ServiceImpl<OperationLogMapper, OperationLog> implements IOperationLogService {
 
+    @Resource
+    ISysUserService userService;
+
     @Override
-    public IPage<OperationLog> selectPage(Map<String, Object> params, OperationLog operationLog) {
+    public IPage<OperationLog> selectPage(Map<String, Object> params, Map<String,String> condition) {
         long current = Long.parseLong(params.get("current").toString());
         long pageSize = Long.parseLong(params.get("pageSize").toString());
         IPage<OperationLog> page = new Page<>(current, pageSize);
         LambdaQueryWrapper<OperationLog> operationLogLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        Long userId = operationLog.getUserId();
-        String ip = operationLog.getIp();
-        if (!ObjectUtils.isEmpty(userId)) {
-            operationLogLambdaQueryWrapper.like(OperationLog::getUserId, userId);
+        String username = condition.get("username");
+        String IP = condition.get("ip");
+        if (!ObjectUtils.isEmpty(username)) {
+            User user = userService.queryUserByUsername(username);
+            operationLogLambdaQueryWrapper.like(OperationLog::getUserId, user.getId());
         }
-        if (!ObjectUtils.isEmpty(ip)) {
-            operationLogLambdaQueryWrapper.like(OperationLog::getIp, ip);
+        if (!ObjectUtils.isEmpty(IP)) {
+            operationLogLambdaQueryWrapper.like(OperationLog::getIp, IP);
         }
         return page(page, operationLogLambdaQueryWrapper.orderByDesc(true, OperationLog::getCreateTime));
     }
