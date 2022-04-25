@@ -45,7 +45,7 @@ public abstract class GeneratorUtil {
                             .pathInfo(Collections.singletonMap(OutputFile.xml, "src/main/resources/mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("operation_log") // 设置需要生成的表名
+                    builder.addInclude("push_record") // 设置需要生成的表名
                             .entityBuilder()   // 实体策略配置
                             .idType(IdType.AUTO)
                             .enableLombok()

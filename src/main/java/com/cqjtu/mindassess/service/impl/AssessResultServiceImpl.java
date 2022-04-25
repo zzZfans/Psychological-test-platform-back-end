@@ -113,9 +113,7 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
     }
 
     @Override
-    public UserAnalysisResp getAnalysis() {
-        Long userId = getUserId();
-
+    public UserAnalysisResp getAnalysis(Long userId) {
         //获取近期一个月的情况
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -141,7 +139,6 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         resp.setAllTypeDetails(allTypeDetail);
         resp = getAnalysisDetail(resp, collect);
 
-
         return resp;
     }
 
@@ -150,6 +147,24 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         Page<AssessResult> page = new Page<>(req.getPage(), req.getPageSize());
         Page<UserAssessResp> userAssessPage = baseMapper.getUserAssessPage(page, req);
         return userAssessPage;
+    }
+
+    @Override
+    public Page<AssessResultResp> getUserHistory(AssessResultPageReq req) {
+        Page<AssessResult> page = new Page<>(req.getPage(), req.getPageSize());
+
+        Page<AssessResult> assessResultPage = page(page, new LambdaQueryWrapper<AssessResult>()
+                .eq(AssessResult::getUserId, req.getUserId())
+                .eq(EmptyChecker.notEmpty(req.getAssessType()), AssessResult::getAssessType, req.getAssessType())
+                .orderByDesc(AssessResult::getCreateTime));
+
+        IPage<AssessResultResp> convert = assessResultPage.convert(item -> BeanUtil.copyProperties(item, AssessResultResp.class));
+        return (Page<AssessResultResp>) convert;
+    }
+
+    @Override
+    public Map<String, Integer> getUserAnalysis(Long userId) {
+        return getAnalysis(userId).getAnalysisDetails();
     }
 
     /**

@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -88,7 +89,8 @@ public class AssessResultController {
     @ApiOperation(value = "获取个人状况分析")
     @GetMapping("/getAnalysis")
     public ApiResponse<?> getAnalysis() {
-        UserAnalysisResp re = assessResultService.getAnalysis();
+        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        UserAnalysisResp re = assessResultService.getAnalysis(userId);
         return ApiResponse.success(re);
     }
 
@@ -96,6 +98,20 @@ public class AssessResultController {
     @PostMapping("/getUserAssessRecord")
     public ApiResponse<?> getUserAssessRecord(@RequestBody UserAssessRecordPageReq req) {
         Page<UserAssessResp> userAssessRecord = assessResultService.getUserAssessRecord(req);
+        return ApiResponse.success(userAssessRecord);
+    }
+
+    @ApiOperation(value = "获取用户历史测试记录列表")
+    @PostMapping("/getUserHistoryList")
+    public ApiResponse<?> getUserHistoryList(@RequestBody AssessResultPageReq req) {
+        Page<AssessResultResp> userAssessRecord = assessResultService.getUserHistory(req);
+        return ApiResponse.success(userAssessRecord);
+    }
+
+    @ApiOperation(value = "获取用户历史测试记录列表")
+    @GetMapping("/getUserAnalysis/{userId}")
+    public ApiResponse<?> getUserAnalysis(@PathVariable Long userId) {
+        Map<String, Integer> userAssessRecord = assessResultService.getUserAnalysis(userId);
         return ApiResponse.success(userAssessRecord);
     }
 

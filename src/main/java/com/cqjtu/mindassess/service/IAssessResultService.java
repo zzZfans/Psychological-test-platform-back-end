@@ -55,7 +55,7 @@ public interface IAssessResultService extends IService<AssessResult> {
      * 个人状态分析
      * @return
      */
-    UserAnalysisResp getAnalysis();
+    UserAnalysisResp getAnalysis(Long userId);
 
     /**
      * 获取用户测试记录列表
@@ -63,5 +63,20 @@ public interface IAssessResultService extends IService<AssessResult> {
      * @return
      */
     Page<UserAssessResp> getUserAssessRecord(UserAssessRecordPageReq req);
+
+
+    /**
+     * 获取用户历史测评记录
+     * @param req
+     * @return
+     */
+    Page<AssessResultResp> getUserHistory(AssessResultPageReq req);
+
+    /**
+     * 获取用户分析结果
+     * @param userId
+     * @return
+     */
+    Map<String, Integer> getUserAnalysis(Long userId);
 
 }

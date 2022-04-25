@@ -1,0 +1,43 @@
+package com.cqjtu.mindassess.controller;
+
+import com.cqjtu.mindassess.common.ApiResponse;
+import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
+import com.cqjtu.mindassess.pojo.req.pushrecord.PushRecordReq;
+import com.cqjtu.mindassess.pojo.resp.pushrecord.PushRecordResp;
+import com.cqjtu.mindassess.service.IPushRecordService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author auther
+ * @since 2022-04-25
+ */
+@RestController
+@RequestMapping("/pushRecord")
+public class PushRecordController {
+
+    @Autowired
+    private IPushRecordService pushRecordService;
+
+    @ApiOperation(value = "添加推送消息")
+    @PostMapping("/save")
+    public ApiResponse<?> save(@RequestBody @Validated PushRecordReq req) {
+        boolean re = pushRecordService.saveRecord(req);
+        return ApiResponse.success(re);
+    }
+
+    @ApiOperation(value = "获取推送记录")
+    @PostMapping("/getPushHistory/{receiverId}")
+    public ApiResponse<?> getPushHistory(@PathVariable Long receiverId) {
+        List<PushRecordResp> re = pushRecordService.getPushHistory(receiverId);
+        return ApiResponse.success(re);
+    }
+}

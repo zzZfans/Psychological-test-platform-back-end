@@ -26,7 +26,7 @@ public class AssessResultResp {
     /**
      * 用户名称
      */
-    private String userName;
+    private String username;
 
     /**
      * 测试类型
