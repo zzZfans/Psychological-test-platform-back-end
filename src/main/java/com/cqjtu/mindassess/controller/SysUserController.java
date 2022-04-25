@@ -195,7 +195,7 @@ public class SysUserController {
     @ApiOperation("测试是否登录")
     @GetMapping("/test")
     public ApiResponse<?> test() {
-        return ApiResponse.success(StpUtil.isLogin());
+        return ApiResponse.success(StpUtil.getLoginId());
     }
 
 
