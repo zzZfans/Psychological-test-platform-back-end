@@ -16,6 +16,10 @@ public class PushRecordReq {
     @NotNull(message = "用户id不能为空")
     private Long receiverId;
 
+    @ApiModelProperty(value = "推送消息标题" ,required = true)
+    @NotBlank(message = "标题不能为空")
+    private String title;
+
     @ApiModelProperty(value = "推送消息" ,required = true)
     @NotBlank(message = "推送消息不能为空")
     private String message;

@@ -1,5 +1,6 @@
 package com.cqjtu.mindassess.pojo.resp.pushrecord;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
  * @author zhangzhencheng
  */
 @Data
+@ApiModel("推送记录列返回结果")
 public class PushRecordResp {
 
     @ApiModelProperty("推送人名称")

@@ -3,6 +3,7 @@ package com.cqjtu.mindassess.service;
 import com.cqjtu.mindassess.entity.PushRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqjtu.mindassess.pojo.req.pushrecord.PushRecordReq;
+import com.cqjtu.mindassess.pojo.resp.pushrecord.MessageResp;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.PushRecordResp;
 
 import java.util.List;
@@ -30,5 +31,11 @@ public interface IPushRecordService extends IService<PushRecord> {
      * @return
      */
     List<PushRecordResp> getPushHistory(Long receiverId);
+
+    /**
+     * 获取消息
+     * @return
+     */
+    MessageResp getPushMessage();
 
 }

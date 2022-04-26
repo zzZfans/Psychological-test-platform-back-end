@@ -39,6 +39,9 @@ public class PushRecord implements Serializable {
     @ApiModelProperty("接收人id")
     private Long receiverId;
 
+    @ApiModelProperty("消息标题")
+    private String title;
+
     @ApiModelProperty("推送消息")
     private String message;
 

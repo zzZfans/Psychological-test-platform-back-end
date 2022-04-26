@@ -1,8 +1,12 @@
 package com.cqjtu.mindassess.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.cqjtu.mindassess.common.ApiResponse;
+import com.cqjtu.mindassess.entity.PushRecord;
 import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
 import com.cqjtu.mindassess.pojo.req.pushrecord.PushRecordReq;
+import com.cqjtu.mindassess.pojo.resp.pushrecord.MessageResp;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.PushRecordResp;
 import com.cqjtu.mindassess.service.IPushRecordService;
 import io.swagger.annotations.ApiOperation;
@@ -35,9 +39,24 @@ public class PushRecordController {
     }
 
     @ApiOperation(value = "获取推送记录")
-    @PostMapping("/getPushHistory/{receiverId}")
+    @GetMapping("/getPushHistory/{receiverId}")
     public ApiResponse<?> getPushHistory(@PathVariable Long receiverId) {
         List<PushRecordResp> re = pushRecordService.getPushHistory(receiverId);
         return ApiResponse.success(re);
+    }
+
+    @ApiOperation(value = "用户获取推送信息")
+    @PostMapping("/getPushMessage")
+    public ApiResponse<?> getPushMessage() {
+        MessageResp re = pushRecordService.getPushMessage();
+        return ApiResponse.success(re);
+    }
+
+    @ApiOperation(value = "更新消息状态")
+    @PostMapping("/readMessage/{msgId}")
+    public ApiResponse<?> readMessage(@PathVariable Long msgId) {
+        boolean update = pushRecordService.update(new UpdateWrapper<PushRecord>().set("status", 1)
+                .eq("id", msgId));
+        return ApiResponse.success(update);
     }
 }
