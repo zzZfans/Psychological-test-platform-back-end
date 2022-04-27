@@ -54,7 +54,7 @@ public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRec
         Page<PushRecord> page = new Page<>(req.getPage(), req.getPageSize());
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
         Page<PushRecord> messagePage = baseMapper.selectPage(page, (new LambdaQueryWrapper<PushRecord>().eq(PushRecord::getReceiverId, userId)
-                .orderByAsc(PushRecord::getCreateTime)));
+                .orderByDesc(PushRecord::getCreateTime)));
 
         IPage<MessageResp> respPage = messagePage
                 .convert(item -> BeanUtil.copyProperties(item, MessageResp.class));
