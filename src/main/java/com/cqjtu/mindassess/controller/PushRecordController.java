@@ -47,7 +47,7 @@ public class PushRecordController {
     }
 
     @ApiOperation(value = "获取未读消息条数")
-    @PostMapping("/getUnreadCount")
+    @GetMapping("/getUnreadCount")
     public ApiResponse<?> getUnreadCount() {
         Integer re = pushRecordService.getUnreadCount();
         return ApiResponse.success(re);
@@ -61,7 +61,7 @@ public class PushRecordController {
     }
 
     @ApiOperation(value = "更新消息状态")
-    @PostMapping("/readMessage/{msgId}")
+    @GetMapping("/readMessage/{msgId}")
     public ApiResponse<?> readMessage(@PathVariable Long msgId) {
         boolean update = pushRecordService.update(new UpdateWrapper<PushRecord>().set("status", MessageStatusCons.ALREADY)
                 .eq("id", msgId));
