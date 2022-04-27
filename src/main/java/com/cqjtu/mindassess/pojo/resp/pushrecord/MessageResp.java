@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * @author zhangzhencheng
@@ -12,10 +12,18 @@ import java.util.List;
 @Data
 @ApiModel("消息信息")
 public class MessageResp {
-    @ApiModelProperty("未读消息总量")
-    private Long unreadCount;
+    @ApiModelProperty("消息id")
+    private Long id;
 
-    @ApiModelProperty("消息信息")
-    private List<MessageInfo> messageInfos;
+    @ApiModelProperty("标题")
+    private String title;
+
+    @ApiModelProperty("消息")
+    private String message;
+
+    @ApiModelProperty("推送时间")
+    private LocalDateTime createTime;
+
+    @ApiModelProperty("消息状态")
+    private Integer status;
 }
-

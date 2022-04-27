@@ -1,7 +1,9 @@
 package com.cqjtu.mindassess.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.entity.PushRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cqjtu.mindassess.pojo.req.pushrecord.MessagePageReq;
 import com.cqjtu.mindassess.pojo.req.pushrecord.PushRecordReq;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.MessageResp;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.PushRecordResp;
@@ -34,8 +36,15 @@ public interface IPushRecordService extends IService<PushRecord> {
 
     /**
      * 获取消息
+     * @param req
      * @return
      */
-    MessageResp getPushMessage();
+    Page<MessageResp> getPushMessage(MessagePageReq req);
+
+    /**
+     * 获取未读信息条数
+     * @return
+     */
+    Integer getUnreadCount();
 
 }
