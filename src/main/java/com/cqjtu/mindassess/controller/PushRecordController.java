@@ -55,7 +55,7 @@ public class PushRecordController {
 
     @ApiOperation(value = "用户获取推送信息")
     @PostMapping("/getPushMessage")
-    public ApiResponse<?> getPushMessage(MessagePageReq req) {
+    public ApiResponse<?> getPushMessage(@RequestBody MessagePageReq req) {
         Page<MessageResp> re = pushRecordService.getPushMessage(req);
         return ApiResponse.success(re);
     }
