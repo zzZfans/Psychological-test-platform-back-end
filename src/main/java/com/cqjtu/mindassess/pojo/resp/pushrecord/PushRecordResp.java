@@ -16,6 +16,9 @@ public class PushRecordResp {
     @ApiModelProperty("推送人名称")
     private String pusherName;
 
+    @ApiModelProperty("推送标题")
+    private String title;
+
     @ApiModelProperty("推送消息")
     private String message;
 
