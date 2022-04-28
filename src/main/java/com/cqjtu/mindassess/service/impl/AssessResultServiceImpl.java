@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.constans.AssessLevelCons;
+import com.cqjtu.mindassess.constans.AssessTypeCons;
 import com.cqjtu.mindassess.constans.LevelVoteThresholdCons;
 import com.cqjtu.mindassess.entity.AssessResult;
 import com.cqjtu.mindassess.entity.User;
@@ -139,6 +140,7 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         resp.setAllTypeDetails(allTypeDetail);
         resp = getAnalysisDetail(resp, collect);
 
+        resp.setAllTypeDetails(dealAllTypeDetail(resp));
         return resp;
     }
 
@@ -196,6 +198,36 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
             }
         });
         return map;
+    }
+    private List<String> getTypeList() {
+        List<String> types = new ArrayList<>();
+        types.add(AssessTypeCons.BODY);
+        types.add(AssessTypeCons.OPPOSE);
+        types.add(AssessTypeCons.ANXIOUS);
+        types.add(AssessTypeCons.DEPRESSION);
+        types.add(AssessTypeCons.INTERPERSONAL);
+        types.add(AssessTypeCons.OBSESSION);
+        types.add(AssessTypeCons.PSYCHOSIS);
+        types.add(AssessTypeCons.STUBBORN);
+        types.add(AssessTypeCons.TERROR);
+
+        return types;
+    }
+
+
+    private Map<String, List<Integer>> dealAllTypeDetail(UserAnalysisResp resp) {
+        List<String> types = getTypeList();
+        Map<String, List<Integer>> allTypeDetails = resp.getAllTypeDetails();
+
+        for (String type : types) {
+            if (!allTypeDetails.containsKey(type)) {
+                List<Integer> list1 = Arrays.asList(0, 0, 0, 0);
+                allTypeDetails.put(type, list1);
+            }
+        }
+
+        return allTypeDetails;
+
     }
 
     /**

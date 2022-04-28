@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.cqjtu.mindassess.entity.AssessResult;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -54,5 +55,6 @@ public class AssessResultResp {
     private Integer day;
 
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone="GMT+8")
     private LocalDateTime createTime;
 }
