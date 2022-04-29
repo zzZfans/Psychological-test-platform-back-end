@@ -237,7 +237,7 @@ public class SysUserController {
     // MinIO存储，User表更新
     @ApiOperation("头像上传")
     @PostMapping("/avatar/upload")
-    public ApiResponse<?> avatarUpload(MultipartFile multipartFile) {
+    public ApiResponse<?> avatarUpload(@RequestParam(value = "file", required = false)MultipartFile multipartFile) {
         if (ObjectUtils.isEmpty(multipartFile)) return ApiResponse.fail(200, "文件不能为空");
 
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
