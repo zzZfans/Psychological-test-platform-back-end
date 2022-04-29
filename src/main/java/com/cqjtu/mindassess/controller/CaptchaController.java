@@ -52,7 +52,7 @@ public class CaptchaController {
             typeEnum = CaptchaTypeEnum.MOBILE;
         }else if (CaptchaTypeEnum.EMAIL.captchaType.equals(captchaType)){
             typeEnum = CaptchaTypeEnum.EMAIL;
-        }else {
+        } else {
             throw new BusinessException("不支持的验证码类型,请携带系统支持的captchaType参数(mobile,email)");
         }
         CaptchaSceneEnum sceneEnum = null;
@@ -60,6 +60,8 @@ public class CaptchaController {
             sceneEnum = CaptchaSceneEnum.LOGIN;
         }else if (CaptchaSceneEnum.REGISTER.scene.equals(scene)){
             sceneEnum = CaptchaSceneEnum.REGISTER;
+        }else if (CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER.scene.equals(scene)){
+            sceneEnum = CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER;
         }else {
             throw new BusinessException("不支持的验证码场景,请携带系统支持的captchaScene参数");
         }
