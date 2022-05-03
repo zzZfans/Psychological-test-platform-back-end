@@ -118,7 +118,10 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
             userInfoVo.setRoles(roleSet);
 
             //根据roleId集合，查询所有权限id集合
-            List<RolePermission> rolePermissions = rolePermissionService.listByIds(roleIds);
+            List<RolePermission> rolePermissions = rolePermissionService.list(
+                    new LambdaQueryWrapper<RolePermission>()
+                            .in(true, RolePermission::getRoleId,roleIds));
+
             if (rolePermissions == null || rolePermissions.size() == 0) {
                 userInfoVo.setPermissions(new HashSet<>());
             } else {
