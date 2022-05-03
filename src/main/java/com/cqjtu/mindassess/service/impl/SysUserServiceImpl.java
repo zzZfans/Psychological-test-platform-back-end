@@ -177,6 +177,7 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
         Set<Long> permissionIds = rolePermissions.stream().map(RolePermission::getPermissionId).collect(Collectors.toSet());
         return permissionService.list(
                 new LambdaQueryWrapper<Permission>()
+                        .eq(Permission::getPermissionType, 0)
                         .in(Permission::getId, permissionIds)
                         .orderByAsc(Permission::getSort));
     }
