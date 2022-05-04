@@ -13,9 +13,7 @@ import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.enums.CaptchaSceneEnum;
 import com.cqjtu.mindassess.enums.CaptchaTypeEnum;
 import com.cqjtu.mindassess.exception.BusinessException;
-import com.cqjtu.mindassess.pojo.req.user.UserPagingConditionDto;
-import com.cqjtu.mindassess.pojo.req.user.UserSmLoginDto;
-import com.cqjtu.mindassess.pojo.req.user.UserSmRegisterDto;
+import com.cqjtu.mindassess.pojo.req.user.*;
 import com.cqjtu.mindassess.pojo.vo.user.LoginSuccessVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserInfoWithRolePermissionVo;
 import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
@@ -256,7 +254,7 @@ public class SysUserController {
     // MinIO上传，User表更新
     @ApiOperation("用户人脸源图上传")
     @PostMapping("/face/upload")
-    public ApiResponse<?> faceUpload(MultipartFile multipartFile) {
+    public ApiResponse<?> faceUpload(@RequestParam("file") MultipartFile multipartFile) {
         if (ObjectUtils.isEmpty(multipartFile)) return ApiResponse.fail(200, "人脸识别源图不能为空");
 
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
@@ -271,4 +269,61 @@ public class SysUserController {
         }
         return ApiResponse.fail(200, "上传失败");
     }
+
+    /**
+     * 逻辑：
+     *  1.验证码验证码是否正确
+     *  2.修改密码
+     */
+    @ApiOperation("通过手机验证码修改密码(需登录状态)")
+    @PostMapping("/updatePasswordByMobileCaptcha")
+    public ApiResponse<?> updatePasswordByMobileCaptcha(@Validated @RequestBody UserUpdatePasswordByMobileDto dto){
+        boolean legitimate = captchaService.confirmCode(
+                dto.getMobile(),
+                dto.getMobileCaptcha(),
+                CaptchaTypeEnum.MOBILE,
+                CaptchaSceneEnum.UPDATE_PASSWORD);
+
+        if(Boolean.FALSE.equals(legitimate)){
+            return ApiResponse.fail(200,"验证码错误");
+        }
+        User user = userService.queryUserByUsername(((String) StpUtil.getLoginId()));
+
+        String encryptionPassword = MD5Util.encryption(dto.getNewPassword() + user.getSalt());
+
+        user.setPassword(encryptionPassword);
+
+        if(userService.updateById(user)){
+            return ApiResponse.success();
+        }
+        return ApiResponse.fail(200,"密码修改失败");
+    }
+
+
+    /**
+     * 逻辑：
+     *  1.验证码手机验证码是否正确
+     *  2.修改用户手机号码
+     */
+    @ApiOperation("通过手机验证码修改手机号(需登录状态)")
+    @PostMapping("/updatePhonenumberByMobileCaptcha")
+    public ApiResponse<?> updatePhoneNumberByMobileCaptcha(@Validated @RequestBody UserUpdatePhoneNumberByMobileDto dto){
+        String newPhoneNumber = dto.getPhoneNumber();
+        boolean legitimate = captchaService.confirmCode(newPhoneNumber,
+                dto.getCaptcha(),
+                CaptchaTypeEnum.MOBILE,
+                CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER);
+        if(Boolean.FALSE.equals(legitimate)){
+            return ApiResponse.fail(200,"验证码错误");
+        }
+        User user = userService.queryUserByUsername(((String) StpUtil.getLoginId()));
+        user.setPassword(newPhoneNumber);
+
+        boolean updateSuccess = userService.updateById(user);
+        if(updateSuccess){
+            return ApiResponse.success();
+        }
+        return ApiResponse.fail(200,"修改失败");
+    }
+
 }

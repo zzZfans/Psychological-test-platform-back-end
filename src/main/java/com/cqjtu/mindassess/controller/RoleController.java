@@ -63,7 +63,6 @@ public class RoleController {
     @ApiOperation("添加角色或修改角色")
     @PostMapping("/saveOrUpdate")
     public ApiResponse<?> saveOrUpdate(@Validated @RequestBody RoleDto dto) {
-        //TODO
         Role role = new Role();
         BeanUtils.copyProperties(dto, role);
         roleService.saveOrUpdate(role);
