@@ -317,7 +317,7 @@ public class SysUserController {
             return ApiResponse.fail(200,"验证码错误");
         }
         User user = userService.queryUserByUsername(((String) StpUtil.getLoginId()));
-        user.setPassword(newPhoneNumber);
+        user.setPhoneNumber(newPhoneNumber);
 
         boolean updateSuccess = userService.updateById(user);
         if(updateSuccess){
