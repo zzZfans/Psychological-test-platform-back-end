@@ -24,7 +24,7 @@ public class AssessResultReq {
     @NotNull(message = "用户名称不能为空")
     private String username;
 
-    @ApiModelProperty(value = "测评类型" ,required = true)
+    @ApiModelProperty(value = "测评类型:躯体化|强迫症|抑郁|焦虑|敌对|恐怖|偏执|精神病性|人际关系敏感",required = true)
     @NotBlank(message = "测评类型不能为空")
     private String assessType;
 
