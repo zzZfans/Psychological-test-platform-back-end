@@ -7,19 +7,15 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.enums.CaptchaSceneEnum;
 import com.cqjtu.mindassess.enums.CaptchaTypeEnum;
 import com.cqjtu.mindassess.exception.BusinessException;
-import com.cqjtu.mindassess.pojo.req.user.UserPagingConditionDto;
-import com.cqjtu.mindassess.pojo.req.user.UserSmLoginDto;
-import com.cqjtu.mindassess.pojo.req.user.UserSmRegisterDto;
-import com.cqjtu.mindassess.pojo.vo.user.LoginSuccessVo;
-import com.cqjtu.mindassess.pojo.vo.user.UserInfoWithRolePermissionVo;
-import com.cqjtu.mindassess.pojo.vo.user.UserNavVo;
-import com.cqjtu.mindassess.pojo.vo.user.UserPageVo;
+import com.cqjtu.mindassess.pojo.req.user.*;
+import com.cqjtu.mindassess.pojo.vo.user.*;
 import com.cqjtu.mindassess.service.ICaptchaService;
 import com.cqjtu.mindassess.service.IFileService;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
@@ -214,6 +210,7 @@ public class SysUserController {
     public ApiResponse<?> userNav() {
         String username = (String) StpUtil.getLoginId();
         List<UserNavVo> userNavVos = userService.queryUserNavByUsername(username);
+        System.out.println(userNavVos);
         return ApiResponse.success(userNavVos);
     }
 
@@ -238,7 +235,9 @@ public class SysUserController {
     @ApiOperation("头像上传")
     @PostMapping("/avatar/upload")
     public ApiResponse<?> avatarUpload(@RequestParam(value = "file", required = false)MultipartFile multipartFile) {
-        if (ObjectUtils.isEmpty(multipartFile)) return ApiResponse.fail(200, "文件不能为空");
+        if (ObjectUtils.isEmpty(multipartFile)) {
+            return ApiResponse.fail(200, "文件不能为空");
+        }
 
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
         String accessURL = fileService.fileUpload(multipartFile);
@@ -257,7 +256,9 @@ public class SysUserController {
     @ApiOperation("用户人脸源图上传")
     @PostMapping("/face/upload")
     public ApiResponse<?> faceUpload(MultipartFile multipartFile) {
-        if (ObjectUtils.isEmpty(multipartFile)) return ApiResponse.fail(200, "人脸识别源图不能为空");
+        if (ObjectUtils.isEmpty(multipartFile)) {
+            return ApiResponse.fail(200, "人脸识别源图不能为空");
+        }
 
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
         String accessURL = fileService.fileUpload(multipartFile);
@@ -271,4 +272,109 @@ public class SysUserController {
         }
         return ApiResponse.fail(200, "上传失败");
     }
+
+    /**
+     * 逻辑：
+     *  1.验证码验证码是否正确
+     *  2.修改密码
+     */
+    @ApiOperation("通过手机验证码修改密码(需登录状态)")
+    @PostMapping("/updatePasswordByMobileCaptcha")
+    public ApiResponse<?> updatePasswordByMobileCaptcha(@Validated @RequestBody UserUpdatePasswordByMobileDto dto){
+        boolean legitimate = captchaService.confirmCode(
+                dto.getMobile(),
+                dto.getMobileCaptcha(),
+                CaptchaTypeEnum.MOBILE,
+                CaptchaSceneEnum.UPDATE_PASSWORD);
+
+        if(Boolean.FALSE.equals(legitimate)){
+            return ApiResponse.fail(200,"验证码错误");
+        }
+        User user = userService.queryUserByUsername(((String) StpUtil.getLoginId()));
+
+        String encryptionPassword = MD5Util.encryption(dto.getNewPassword() + user.getSalt());
+
+        user.setPassword(encryptionPassword);
+
+        if(userService.updateById(user)){
+            return ApiResponse.success();
+        }
+        return ApiResponse.fail(200,"密码修改失败");
+    }
+
+
+    /**
+     * 逻辑：
+     *  1.验证码手机验证码是否正确
+     *  2.修改用户手机号码
+     */
+    @ApiOperation("通过手机验证码修改手机号(需登录状态)")
+    @PostMapping("/updatePhonenumberByMobileCaptcha")
+    public ApiResponse<?> updatePhoneNumberByMobileCaptcha(@Validated @RequestBody UserUpdatePhoneNumberByMobileDto dto){
+        String newPhoneNumber = dto.getPhoneNumber();
+        boolean legitimate = captchaService.confirmCode(newPhoneNumber,
+                dto.getCaptcha(),
+                CaptchaTypeEnum.MOBILE,
+                CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER);
+        if(Boolean.FALSE.equals(legitimate)){
+            return ApiResponse.fail(200,"验证码错误");
+        }
+        User user = userService.queryUserByUsername(((String) StpUtil.getLoginId()));
+        user.setPassword(newPhoneNumber);
+
+        boolean updateSuccess = userService.updateById(user);
+        if(updateSuccess){
+            return ApiResponse.success();
+        }
+        return ApiResponse.fail(200,"修改失败");
+    }
+
+
+    // 个人设置
+    // 个人基本设置
+    @ApiOperation("用户基本设置")
+    @PostMapping("/updateBaseInfo")
+    public ApiResponse<?> updateBaseInfo(@RequestBody UserBaseInfoVo userBaseInfoVo){
+
+
+        Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<User>();
+        userUpdateWrapper.set("username", userBaseInfoVo.getUpdateUserName())
+                .set("email_address", userBaseInfoVo.getUpdateUserAddress()).eq("id", userId);
+
+        boolean update = userService.update(userUpdateWrapper);
+        return ApiResponse.success(update);
+    }
+
+    // 个人密码设置
+    @ApiOperation("用户密码更改")
+    @PostMapping("/updatePasswordInfoByOldPassword")
+    public ApiResponse<?> updatePasswordInfo(@RequestBody UserPasswordInfoVo userPasswordInfoVo){
+        UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<User>();
+        User user=((User)StpUtil.getSession().get("user"));
+        String salt=user.getSalt();  // 原salt
+        Long userId = user.getId();
+        String encryptionPassword = MD5Util.encryption(userPasswordInfoVo.getPassword() + salt);
+        System.out.println("原密码"+encryptionPassword);
+        if (user.getPassword().equals(encryptionPassword)) {
+            String newencryptionPassword = MD5Util.encryption(userPasswordInfoVo.getNewPassword() + salt);
+            System.out.println("新密码"+newencryptionPassword);
+            user.setPassword(newencryptionPassword);
+            StpUtil.getSession().set("user", user);
+            userUpdateWrapper.set("password", newencryptionPassword)
+                    .eq("id", userId);
+
+            boolean update = userService.update(userUpdateWrapper);
+            return ApiResponse.success(update);
+        }else {
+            return ApiResponse.fail(200,"密码更改失败");
+        }
+    }
+
+//    //忘记密码（重新）设置
+//    @ApiOperation("用户忘记密码（重新）设置")
+//    @PostMapping("/updateForgetPasswordInfo")
+//    public ApiResponse<?> updateForgetPasswordInfo(){
+//
+//    }
 }
