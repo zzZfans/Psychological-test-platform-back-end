@@ -6,6 +6,7 @@ import com.cqjtu.mindassess.enums.CaptchaTypeEnum;
 import com.cqjtu.mindassess.enums.ShortMessageScenes;
 import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.pojo.req.captcha.CaptchaDto;
+import com.cqjtu.mindassess.pojo.req.captcha.ConfirmDto;
 import com.cqjtu.mindassess.service.ICaptchaService;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
 import com.cqjtu.mindassess.service.ISysUserService;
@@ -56,12 +57,28 @@ public class CaptchaController {
             throw new BusinessException("不支持的验证码类型,请携带系统支持的captchaType参数(mobile,email)");
         }
         CaptchaSceneEnum sceneEnum = null;
-        if( CaptchaSceneEnum.LOGIN.scene.equals(scene)){
+        /*
+            login
+            register
+            update_mobile_phone_number
+            confirm_mobile_phone_number
+            update_password
+         */
+        if( scene.equals(CaptchaSceneEnum.LOGIN.scene)){
             sceneEnum = CaptchaSceneEnum.LOGIN;
-        }else if (CaptchaSceneEnum.REGISTER.scene.equals(scene)){
+
+        }else if (scene.equals(CaptchaSceneEnum.REGISTER.scene)){
             sceneEnum = CaptchaSceneEnum.REGISTER;
-        }else if (CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER.scene.equals(scene)){
+
+        }else if (scene.equals(CaptchaSceneEnum.UPDATE_PASSWORD.scene)){
+            sceneEnum = CaptchaSceneEnum.UPDATE_PASSWORD;
+
+        }else if (scene.equals(CaptchaSceneEnum.CONFIRM_MOBILE_PHONE_NUMBER.scene)){
+            sceneEnum = CaptchaSceneEnum.CONFIRM_MOBILE_PHONE_NUMBER;
+
+        }else if (scene.equals(CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER.scene)){
             sceneEnum = CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER;
+
         }else {
             throw new BusinessException("不支持的验证码场景,请携带系统支持的captchaScene参数");
         }
@@ -70,5 +87,13 @@ public class CaptchaController {
         Map<String,Object> res = new HashMap<>();
         res.put("expireTime",expireTime);
         return ApiResponse.success(res);
+    }
+
+
+    @ApiOperation(value = "确认验证码")
+    @PostMapping("/captcha/confirm")
+    public ApiResponse<?> captchaConfirm(@RequestBody ConfirmDto dto){
+        boolean legitimate = captchaService.confirmCode(dto.getMobile(), dto.getCode(), CaptchaTypeEnum.MOBILE, CaptchaSceneEnum.CONFIRM_MOBILE_PHONE_NUMBER);
+        return ApiResponse.success(legitimate);
     }
 }

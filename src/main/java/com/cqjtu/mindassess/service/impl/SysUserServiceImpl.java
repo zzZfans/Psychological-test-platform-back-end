@@ -14,6 +14,7 @@ import com.cqjtu.mindassess.util.EmptyChecker;
 import com.cqjtu.mindassess.util.MD5Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -118,7 +119,10 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
             userInfoVo.setRoles(roleSet);
 
             //根据roleId集合，查询所有权限id集合
-            List<RolePermission> rolePermissions = rolePermissionService.listByIds(roleIds);
+            List<RolePermission> rolePermissions = rolePermissionService.list(
+                    new LambdaQueryWrapper<RolePermission>()
+                            .in(true, RolePermission::getRoleId,roleIds));
+
             if (rolePermissions == null || rolePermissions.size() == 0) {
                 userInfoVo.setPermissions(new HashSet<>());
             } else {
@@ -127,11 +131,10 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
                 if (permissions == null || permissions.size() == 0) {
                     userInfoVo.setPermissions(new HashSet<>());
                 } else {
-                    Set<String> permissionSet = new HashSet<>();
-                    for (Permission permission : permissions) {
-                        //TODO
-                        permissionSet.add(permission.getPermission());
-                    }
+                    Set<String> permissionSet = permissions.stream()
+                            .filter(p -> EmptyChecker.notEmpty(p.getPermission()))
+                            .map(Permission::getPermission)
+                            .collect(Collectors.toSet());
                     userInfoVo.setPermissions(permissionSet);
                 }
             }
@@ -174,6 +177,7 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
         Set<Long> permissionIds = rolePermissions.stream().map(RolePermission::getPermissionId).collect(Collectors.toSet());
         return permissionService.list(
                 new LambdaQueryWrapper<Permission>()
+                        .eq(Permission::getPermissionType, 0)
                         .in(Permission::getId, permissionIds)
                         .orderByAsc(Permission::getSort));
     }

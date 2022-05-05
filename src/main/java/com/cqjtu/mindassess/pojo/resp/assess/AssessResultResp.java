@@ -1,9 +1,5 @@
 package com.cqjtu.mindassess.pojo.resp.assess;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.cqjtu.mindassess.entity.AssessResult;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 

@@ -82,10 +82,18 @@ public class CaptchaServiceImpl implements ICaptchaService {
         if (CaptchaSceneEnum.REGISTER.scene.equals(sceneEnum.scene)) {
             req.setTemplateID(tencentSmProperties.getTemplateIds()[0]);
             templateParams = new String[]{context, String.valueOf(DEFAULT_CODE_EXPIRATION_TIME)};
+
         } else if (CaptchaSceneEnum.LOGIN.scene.equals(sceneEnum.scene)) {
             req.setTemplateID(tencentSmProperties.getTemplateIds()[1]);
             templateParams = new String[]{context};
-        } else {
+
+        } else if (sceneEnum.equals(CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER) ||
+                sceneEnum.equals(CaptchaSceneEnum.UPDATE_PASSWORD) ||
+                sceneEnum.equals(CaptchaSceneEnum.CONFIRM_MOBILE_PHONE_NUMBER)){
+            req.setTemplateID(tencentSmProperties.getTemplateIds()[2]);
+            templateParams = new String[]{context,String.valueOf(DEFAULT_CODE_EXPIRATION_TIME)};
+
+        }else {
             throw new SystemErrorException("系统不支持当前类型的短信模板");
         }
         req.setTemplateParamSet(templateParams);

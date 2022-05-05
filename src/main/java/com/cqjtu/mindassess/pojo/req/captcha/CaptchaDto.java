@@ -23,9 +23,11 @@ public class CaptchaDto {
      * 验证码使用场景: scene = login | register | update_mobile_phone_number
      *  login: 登录场景
      *  register: 注册场景
-     *  update_mobile_phone_number: 修改移动手机号码场景
+     *  update_mobile_phone_number: 修改用户移动手机号码场景
+     *  confirm_mobile_phone_number: 确认用户是该手机号拥有者场景
+     *  update_password: 修改用户密码场景
      */
-    @ApiModelProperty(value = "验证码使用场景",example = "login | register | update_mobile_phone_number")
+    @ApiModelProperty(value = "验证码使用场景",example = "login | register | update_mobile_phone_number| confirm_mobile_phone_number | update_password")
     @NotBlank(message = "请添加验证码使用场景")
     private String scene;
 

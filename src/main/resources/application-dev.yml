@@ -61,6 +61,7 @@ short-message:
     template-ids:
       - 1355525  # 注册短信模板id
       - 1355526  # 登录短信模板id
+      - 1391199  # 通用模板id
 # Sa-Token配置
 sa-token:
   # token名称 (同时也是cookie名称)
