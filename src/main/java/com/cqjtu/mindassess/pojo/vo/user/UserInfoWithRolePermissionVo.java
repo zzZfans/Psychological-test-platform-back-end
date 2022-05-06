@@ -29,7 +29,7 @@ public class UserInfoWithRolePermissionVo {
     @ApiModelProperty("性别")
     private Integer sex;
     @ApiModelProperty("出生日期")
-    private LocalDate dateOfBirth;
+    private LocalDateTime dateOfBirth;
     @ApiModelProperty("头像")
     private String avatar;
     @ApiModelProperty("人脸识别源图 ")
