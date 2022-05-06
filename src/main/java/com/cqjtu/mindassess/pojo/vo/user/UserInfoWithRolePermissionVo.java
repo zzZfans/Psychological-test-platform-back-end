@@ -1,5 +1,6 @@
 package com.cqjtu.mindassess.pojo.vo.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class UserInfoWithRolePermissionVo {
     private String emailAddress;
     @ApiModelProperty("性别")
     private Integer sex;
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
     @ApiModelProperty("出生日期")
     private LocalDateTime dateOfBirth;
     @ApiModelProperty("头像")
@@ -37,7 +39,7 @@ public class UserInfoWithRolePermissionVo {
     @ApiModelProperty("最近一次登录 ip")
     private String lastLoginIp;
     @ApiModelProperty("最后一次登录时间")
-    private String lastLoginTime;
+    private LocalDateTime lastLoginTime;
     @ApiModelProperty("状态变更者 id")
     private String stateChangerId;
     @ApiModelProperty("状态变更时间")
