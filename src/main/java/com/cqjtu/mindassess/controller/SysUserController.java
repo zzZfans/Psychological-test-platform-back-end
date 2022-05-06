@@ -255,7 +255,7 @@ public class SysUserController {
     // MinIO上传，User表更新
     @ApiOperation("用户人脸源图上传")
     @PostMapping("/face/upload")
-    public ApiResponse<?> faceUpload(MultipartFile multipartFile) {
+    public ApiResponse<?> faceUpload(@RequestParam(value = "file", required = false)MultipartFile multipartFile) {
         if (ObjectUtils.isEmpty(multipartFile)) {
             return ApiResponse.fail(200, "人脸识别源图不能为空");
         }
