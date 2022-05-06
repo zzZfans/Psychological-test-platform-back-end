@@ -78,3 +78,8 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
+# ASRT Client 配置
+asrt:
+  host: www.amosdzhn.space
+  port: 20001
+  protocol: http
