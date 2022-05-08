@@ -23,6 +23,7 @@ import java.util.Map;
 @Api(tags = {"音频转换文本控制器"})
 @RestController
 @RequestMapping("/asrt/convert")
+@Deprecated
 public class AsrtController {
 
     @Resource
