@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -37,6 +38,8 @@ public class AudioFileAnalysisServiceImpl implements IAudioFileAnalysisService {
     IFileService fileService;
     @Resource
     ICallPyScriptService callPyScriptService;
+
+    private static final String KEY_RESULT_EMOTION = "Recogntion";
 
 
     @Override
@@ -68,7 +71,10 @@ public class AudioFileAnalysisServiceImpl implements IAudioFileAnalysisService {
             String result = emotionFuture.get();
             //解析
             String[] scriptPrintLines = result.split("\n");
-            emotion = scriptPrintLines[scriptPrintLines.length - 3].split(":")[1].trim();
+            emotion = Arrays.stream(scriptPrintLines)
+                    .filter( s -> s.contains(KEY_RESULT_EMOTION))
+                    .map( s -> s.split(":")[1].trim())
+                    .collect(Collectors.joining());
 
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
