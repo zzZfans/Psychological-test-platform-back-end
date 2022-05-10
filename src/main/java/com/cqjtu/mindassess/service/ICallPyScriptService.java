@@ -12,5 +12,17 @@ import java.util.concurrent.Future;
  */
 public interface ICallPyScriptService {
 
+    /**
+     * 异步任务，调用Python脚本进行音频情绪识别
+     * @param is 被识别音频输入流
+     * @return -
+     */
     Future<String> callEmotionRecognition(InputStream is);
+
+    /**
+     * 调用Python脚本进行文本情绪识别
+     * @param is 被识别文本输入流
+     * @return -
+     */
+    String callTextEmotionRecognition(InputStream is);
 }
