@@ -142,6 +142,12 @@
             <artifactId>hutool-system</artifactId>
             <version>5.7.22</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.toolgood</groupId>
+            <artifactId>toolgood-words</artifactId>
+            <version>3.0.3.1</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
