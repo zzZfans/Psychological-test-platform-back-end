@@ -83,3 +83,8 @@ asrt:
   host: www.amosdzhn.space
   port: 20001
   protocol: http
+# aliyun 智能语音服务
+aliyun-intelligent-voice:
+  accessKeyId: LTAI5t6sTJU6rUmycweMbZsn
+  accessKeySecret: OdSAHhTmYFTlayPXQ016uMnMLqo1z6
+  appKey: 1bSEFiS4JoJx0COt
