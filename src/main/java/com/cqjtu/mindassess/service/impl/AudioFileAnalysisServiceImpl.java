@@ -67,6 +67,10 @@ public class AudioFileAnalysisServiceImpl implements IAudioFileAnalysisService {
             audioText = "";
         }
         vo.setAudioText(audioText);
+        InputStream textIS = new ByteArrayInputStream(audioText.getBytes(StandardCharsets.UTF_8));
+        String textEmotion = callPyScriptService.callTextEmotionRecognition(textIS);
+        vo.setTextEmotion(textEmotion);
+
         String emotion = null;
         try {
             String result = emotionFuture.get();
@@ -82,9 +86,6 @@ public class AudioFileAnalysisServiceImpl implements IAudioFileAnalysisService {
             throw new SystemErrorException("调用Python脚本解析音频文件情绪错误");
         }
         vo.setAudioEmotion(emotion);
-        InputStream textIS = new ByteArrayInputStream(audioText.getBytes(StandardCharsets.UTF_8));
-        String textEmotion = callPyScriptService.callTextEmotionRecognition(textIS);
-        vo.setTextEmotion(textEmotion);
         return vo;
     }
 }
