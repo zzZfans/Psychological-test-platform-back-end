@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -81,7 +82,9 @@ public class AudioFileAnalysisServiceImpl implements IAudioFileAnalysisService {
             throw new SystemErrorException("调用Python脚本解析音频文件情绪错误");
         }
         vo.setAudioEmotion(emotion);
-        vo.setTextEmotion(emotion);
+        InputStream textIS = new ByteArrayInputStream(audioText.getBytes(StandardCharsets.UTF_8));
+        String textEmotion = callPyScriptService.callTextEmotionRecognition(textIS);
+        vo.setTextEmotion(textEmotion);
         return vo;
     }
 }
