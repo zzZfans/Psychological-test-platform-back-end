@@ -8,18 +8,18 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.constans.MessageStatusCons;
 import com.cqjtu.mindassess.entity.PushRecord;
 import com.cqjtu.mindassess.entity.User;
+import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.mapper.PushRecordMapper;
 import com.cqjtu.mindassess.pojo.req.pushrecord.MessagePageReq;
 import com.cqjtu.mindassess.pojo.req.pushrecord.PushRecordReq;
-import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.MessageResp;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.PushRecordResp;
 import com.cqjtu.mindassess.service.IPushRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -32,9 +32,15 @@ import java.util.stream.Collectors;
 @Service
 public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRecord> implements IPushRecordService {
 
+    @Autowired
+    SensitiveWordService sensitiveWordService;
+
     @Override
     public Boolean saveRecord(PushRecordReq req) {
         Long pusherId = ((User) StpUtil.getSession().get("user")).getId();
+        if (sensitiveWordService.judgeSensitivityWord(req.getMessage()))  {
+            throw new BusinessException("存在敏感词");
+        }
         PushRecord pushRecord = new PushRecord();
         pushRecord.setTitle(req.getTitle());
         pushRecord.setPusherId(pusherId);
