@@ -26,27 +26,27 @@ public class CallPyScriptServiceImpl implements ICallPyScriptService {
     /**
      * 待解析的音频文件临时存放路径
      */
-    private static final String TEMP_FILE_DIR = "F:\\awesome\\mind-assess\\temp\\";
+    private static final String TEMP_FILE_DIR = "src/main/resources/static/test/audio";
 
     /**
      * 音频分析脚本解释器路径
      */
-    private static final String AUDIO_PYTHON_VENV_INTERPRETER = "C:\\Users\\zhn\\Desktop\\ser\\venv\\Scripts\\python.exe";
+    private static final String AUDIO_PYTHON_VENV_INTERPRETER = "C:\\Users\\Zfans\\.conda\\envs\\Speech-Emotion-Recognition-2\\python.exe";
 
     /**
      *  音频分析脚本文件路径
      */
-    private static final String AUDIO_EMOTION_SCRIPT_PATH = "C:\\Users\\zhn\\Desktop\\ser\\predict.py";
+    private static final String AUDIO_EMOTION_SCRIPT_PATH = "C:\\Users\\Zfans\\Desktop\\ser\\predict.py";
 
     /**
      * 文本分析脚本解释器路径
      */
-    private static final String TEXT_PYTHON_VENV_INTERPRETER = "F:\\awesome\\mind-assess\\scripts\\simple-text_emotion\\venv\\Scripts\\python.exe";
+    private static final String TEXT_PYTHON_VENV_INTERPRETER = "C:\\Users\\Zfans\\.conda\\envs\\simple-text_emotion\\python.exe";
 
     /**
      * 文本分析脚本文件路径
      */
-    private static final String TEXT_EMOTION_SCRIPT_PATH = "F:\\awesome\\mind-assess\\scripts\\simple-text_emotion\\analyze.py";
+    private static final String TEXT_EMOTION_SCRIPT_PATH = "scripts/simple-text_emotion/analyze.py";
 
 
     @Async
@@ -234,7 +234,7 @@ public class CallPyScriptServiceImpl implements ICallPyScriptService {
         ICallPyScriptService callPyScriptService = new CallPyScriptServiceImpl();
 
         // ================== 测试文本情绪======================
-        String textFilePath = "C:\\Users\\zhn\\Desktop\\demo.txt";
+        String textFilePath = "src/main/resources/static/test/emotionalText.txt";
         InputStream is = new FileInputStream(textFilePath);
         String rest = callPyScriptService.callTextEmotionRecognition(is);
         System.out.println(rest);
@@ -250,7 +250,7 @@ public class CallPyScriptServiceImpl implements ICallPyScriptService {
 
         // ================== 测试音频===========================
         // 1.测试音频文件路径
-        String audioFilePath = "C:\\Users\\zhn\\Desktop\\lyWAV16000.wav";
+        String audioFilePath = "src/main/resources/static/test/audio/3_31_1652274970230.wav";
 
         // 2.读取文件为输入流
         InputStream is2 = null;
