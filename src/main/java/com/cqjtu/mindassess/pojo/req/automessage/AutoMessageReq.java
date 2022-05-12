@@ -28,6 +28,10 @@ public class AutoMessageReq {
     @NotBlank(message = "类型不能为空", groups = {SaveGroup.class, UpdateGroup.class})
     private String type;
 
+    @ApiModelProperty("消息标题")
+    @NotBlank(message = "消息标题不能为空", groups = {SaveGroup.class, UpdateGroup.class})
+    private String title;
+
     @ApiModelProperty("消息")
     @NotBlank(message = "消息不能为空", groups = {SaveGroup.class, UpdateGroup.class})
     private String message;

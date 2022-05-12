@@ -25,7 +25,6 @@ public class AutoMessagePageReq {
     private int pageSize = 5;
 
     @ApiModelProperty("类型")
-    @NotBlank(message = "类型不能为空")
-    @TypeCheck(value = {"all"},message = "类型不正确")
+    @TypeCheck(value = {"all",""},message = "类型不正确")
     private String type;
 }

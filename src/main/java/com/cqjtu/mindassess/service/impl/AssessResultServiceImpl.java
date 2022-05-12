@@ -245,6 +245,7 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
 
             Integer terrorBackCount = 0;
             for (AssessResult temp : next.getValue()) {
+                terrorBackCountMap.put(next.getKey(), terrorBackCount);
                 terrorBackCount++;
                 Integer level = temp.getResultLevel();
                 if (!result.containsKey(next.getKey())) {

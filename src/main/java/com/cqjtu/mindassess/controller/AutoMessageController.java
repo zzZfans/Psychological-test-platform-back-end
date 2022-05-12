@@ -2,7 +2,6 @@ package com.cqjtu.mindassess.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.common.SaveGroup;
@@ -10,7 +9,6 @@ import com.cqjtu.mindassess.common.UpdateGroup;
 import com.cqjtu.mindassess.entity.AutoMessage;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.exception.BusinessException;
-import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
 import com.cqjtu.mindassess.pojo.req.automessage.AutoMessagePageReq;
 import com.cqjtu.mindassess.pojo.req.automessage.AutoMessageReq;
 import com.cqjtu.mindassess.pojo.resp.automessage.AutoMessageResp;

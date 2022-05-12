@@ -35,6 +35,9 @@ public class AutoMessage implements Serializable {
     @ApiModelProperty("消息")
     private String message;
 
+    @ApiModelProperty("标题")
+    private String title;
+
     @ApiModelProperty("类型,与测试结果类型对应,all: 通用类型")
     private String type;
 
