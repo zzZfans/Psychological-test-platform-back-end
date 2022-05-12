@@ -12,7 +12,7 @@
     <select id="getPushHistory" resultMap="pushHistory">
         select b.username pusherName,a.message,a.title,a.status,a.create_time,a.update_time
         from push_record a,`user` b
-        where a.pusher_id = b.id and a.pusher_id = #{id}
+        where a.pusher_id = b.id and a.receiver_id = #{id}
         order by a.create_time desc
     </select>
 
