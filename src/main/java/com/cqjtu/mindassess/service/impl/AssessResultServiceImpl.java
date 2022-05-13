@@ -156,7 +156,7 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         Page<AssessResult> page = new Page<>(req.getPage(), req.getPageSize());
 
         Page<AssessResult> assessResultPage = page(page, new LambdaQueryWrapper<AssessResult>()
-                .eq(AssessResult::getUserId, req.getUserId())
+                .eq(EmptyChecker.notEmpty(req.getUserId()),AssessResult::getUserId, req.getUserId())
                 .eq(EmptyChecker.notEmpty(req.getAssessType()), AssessResult::getAssessType, req.getAssessType())
                 .orderByDesc(AssessResult::getCreateTime));
 

@@ -2,4 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cqjtu.mindassess.mapper.UserCommentMapper">
 
+    <resultMap id="comment" type="com.cqjtu.mindassess.pojo.resp.comment.CommentResp">
+        <result property="id" column="id"/>
+        <result property="content" column="message"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="parentUsername" column="parent_username"/>
+        <result property="avatar" column="avatar"/>
+        <result property="topId" column="top_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="count" column="count"/>
+    </resultMap>
+    <select id="getComments" resultMap="comment">
+        select c.*,IFNULL(d.count, 0) as `count` from user_comment c left join
+                (select count(*) `count`,a.id from user_comment a,user_comment b where a.id = b.top_id and a.top_id = 0
+                group by a.id)d on c.id = d.id where c.top_id = 0
+    </select>
 </mapper>
