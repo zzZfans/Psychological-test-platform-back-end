@@ -11,6 +11,7 @@
         <result property="avatar" column="avatar"/>
         <result property="topId" column="top_id"/>
         <result property="parentId" column="parent_id"/>
+        <result property="content" column="content"/>
         <result property="createTime" column="create_time"/>
         <result property="isDeleted" column="is_deleted"/>
         <result property="count" column="count"/>
