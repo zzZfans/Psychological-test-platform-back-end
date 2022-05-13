@@ -35,6 +35,7 @@ public class AutoMessageServiceImpl extends ServiceImpl<AutoMessageMapper, AutoM
         autoMessage.setCreateId(userId);
         autoMessage.setType(messageReq.getType());
         autoMessage.setUpdateId(userId);
+        autoMessage.setTitle(messageReq.getTitle());
 
         return save(autoMessage);
     }

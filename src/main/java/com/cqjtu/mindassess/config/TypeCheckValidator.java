@@ -16,12 +16,10 @@ public class TypeCheckValidator implements ConstraintValidator<TypeCheck, String
     private String[] values;
     @Override
     public void initialize(TypeCheck typeCheck) {
-        System.out.println("dsadasd");
         this.values = typeCheck.value();
     }
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        System.out.println("大萨达所多---------------");
         List<String> types = new ArrayList<>();
         types.add(AssessTypeCons.BODY);
         types.add(AssessTypeCons.OPPOSE);

@@ -24,8 +24,8 @@ public class AutoMessageReq {
     private Long id;
 
     @ApiModelProperty("消息类型，对应测试结果类型")
-    @TypeCheck(value = {"all"},message = "类型不正确", groups = {SaveGroup.class, UpdateGroup.class})
     @NotBlank(message = "类型不能为空", groups = {SaveGroup.class, UpdateGroup.class})
+    @TypeCheck(value = {"all"},message = "类型不正确", groups = {SaveGroup.class, UpdateGroup.class})
     private String type;
 
     @ApiModelProperty("消息标题")

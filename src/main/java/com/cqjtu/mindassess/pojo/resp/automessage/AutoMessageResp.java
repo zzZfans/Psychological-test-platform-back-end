@@ -20,6 +20,9 @@ public class AutoMessageResp {
     @ApiModelProperty("类型")
     private String type;
 
+    @ApiModelProperty("标题")
+    private String title;
+
     @ApiModelProperty("消息")
     private String message;
 
