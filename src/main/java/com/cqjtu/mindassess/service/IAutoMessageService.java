@@ -5,8 +5,9 @@ import com.cqjtu.mindassess.entity.AutoMessage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqjtu.mindassess.pojo.req.automessage.AutoMessagePageReq;
 import com.cqjtu.mindassess.pojo.req.automessage.AutoMessageReq;
-import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.automessage.AutoMessageResp;
+
+import java.util.List;
 
 /**
  * <p>

@@ -9,6 +9,11 @@
         <result property="sex" column="sex"/>
         <result property="nearAssessTime" column="nearAssessTime"/>
     </resultMap>
+
+    <resultMap id="users" type="com.cqjtu.mindassess.pojo.resp.assess.UserAssessBo">
+        <result property="userId" column="user_id"/>
+        <result property="assessType" column="assess_type"/>
+    </resultMap>
     <select id="getUserAssessPage" resultMap="userAssess">
         select user.username,user.phone_number,user.sex,a.user_id,a.create_time nearAssessTime
         from user,
@@ -20,5 +25,10 @@
         <if test="req.userName != null and req.userName!=''">
               and user.username like concat('%',#{req.username}, '%')
         </if>
+    </select>
+
+    <select id="getProUserList" resultMap="users">
+        select user_id,assess_type FROM assess_result GROUP BY user_id,assess_type
+        having max(result_level) > 0
     </select>
 </mapper>

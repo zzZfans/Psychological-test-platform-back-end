@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.entity.AssessResult;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
+import com.cqjtu.mindassess.pojo.resp.assess.UserAssessBo;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -24,5 +27,11 @@ public interface AssessResultMapper extends BaseMapper<AssessResult> {
      * @return
      */
     Page<UserAssessResp> getUserAssessPage(Page<?> page, @Param("req") UserAssessRecordPageReq req);
+
+    /**
+     * 获取有心理问题记录的用户列表
+     * @return
+     */
+    List<UserAssessBo> getProUserList();
 
 }

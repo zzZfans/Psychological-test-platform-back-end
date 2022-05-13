@@ -14,6 +14,7 @@ import com.cqjtu.mindassess.pojo.req.pushrecord.MessagePageReq;
 import com.cqjtu.mindassess.pojo.req.pushrecord.PushRecordReq;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.MessageResp;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.PushRecordResp;
+import com.cqjtu.mindassess.service.IAutoMessageService;
 import com.cqjtu.mindassess.service.IPushRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

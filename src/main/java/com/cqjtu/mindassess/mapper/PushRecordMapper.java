@@ -2,7 +2,6 @@ package com.cqjtu.mindassess.mapper;
 
 import com.cqjtu.mindassess.entity.PushRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
 import com.cqjtu.mindassess.pojo.resp.pushrecord.PushRecordResp;
 import org.apache.ibatis.annotations.Param;
 
