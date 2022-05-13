@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.entity.AutoMessage;
 import com.cqjtu.mindassess.entity.User;
+import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.mapper.AutoMessageMapper;
 import com.cqjtu.mindassess.pojo.req.automessage.AutoMessagePageReq;
 import com.cqjtu.mindassess.pojo.req.automessage.AutoMessageReq;
@@ -14,9 +15,9 @@ import com.cqjtu.mindassess.pojo.resp.automessage.AutoMessageResp;
 import com.cqjtu.mindassess.service.IAutoMessageService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.util.EmptyChecker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 /**
  * <p>
@@ -29,9 +30,15 @@ import java.util.List;
 @Service
 public class AutoMessageServiceImpl extends ServiceImpl<AutoMessageMapper, AutoMessage> implements IAutoMessageService {
 
+    @Autowired
+    SensitiveWordService sensitiveWordService;
+
     @Override
     public boolean saveAutoMessage(AutoMessageReq messageReq) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
+        if (sensitiveWordService.judgeSensitivityWord(messageReq.getMessage())) {
+            throw new BusinessException("存在敏感词");
+        }
         AutoMessage autoMessage = new AutoMessage();
         autoMessage.setMessage(messageReq.getMessage());
         autoMessage.setCreateId(userId);
