@@ -21,11 +21,14 @@ import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
 import com.cqjtu.mindassess.service.IAssessResultService;
+import com.cqjtu.mindassess.service.ISysUserService;
 import com.cqjtu.mindassess.util.EmptyChecker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +41,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, AssessResult> implements IAssessResultService {
+
+    @Autowired
+    ISysUserService userService;
 
     @Override
     public boolean saveAssessResult(AssessResultReq resultReq) {
@@ -160,7 +166,16 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
                 .eq(EmptyChecker.notEmpty(req.getAssessType()), AssessResult::getAssessType, req.getAssessType())
                 .orderByDesc(AssessResult::getCreateTime));
 
-        IPage<AssessResultResp> convert = assessResultPage.convert(item -> BeanUtil.copyProperties(item, AssessResultResp.class));
+        List<Long> userIds = assessResultPage.getRecords().stream().map(AssessResult::getUserId).collect(Collectors.toList());
+        IPage < AssessResultResp > convert = assessResultPage.convert(item -> BeanUtil.copyProperties(item, AssessResultResp.class));
+        List<User> users = userService.list(new LambdaQueryWrapper<User>().in(User::getId, userIds));
+        for (AssessResultResp resp: convert.getRecords()) {
+            for (User user: users) {
+                if (resp.getUserId().equals(user.getId())) {
+                    resp.setAvatar(user.getAvatar());
+                }
+            }
+        }
         return (Page<AssessResultResp>) convert;
     }
 

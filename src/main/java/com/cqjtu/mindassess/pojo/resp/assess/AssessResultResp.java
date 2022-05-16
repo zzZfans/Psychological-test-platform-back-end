@@ -1,6 +1,7 @@
 package com.cqjtu.mindassess.pojo.resp.assess;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,9 @@ public class AssessResultResp {
      * 用户名称
      */
     private String username;
+
+    @ApiModelProperty("头像")
+    private String avatar;
 
     /**
      * 测试类型

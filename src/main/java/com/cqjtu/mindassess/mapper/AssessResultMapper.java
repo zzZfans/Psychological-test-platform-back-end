@@ -21,7 +21,7 @@ import java.util.List;
 public interface AssessResultMapper extends BaseMapper<AssessResult> {
 
     /**
-     * 获取以及测试了的用户列表
+     * 获取已经测试了的用户列表
      * @param page
      * @param req
      * @return
