@@ -62,7 +62,7 @@ public class NoticeController {
 
     @ApiOperation(value = "公告分页查询")
     @PostMapping("/page")
-    public ApiResponse<?> delete(@RequestBody NoticePageReq pageReq) {
+    public ApiResponse<?> page(@RequestBody NoticePageReq pageReq) {
         Page<Notice> page = noticeService.page(new Page<>(pageReq.getPage(), pageReq.getPageSize()));
         IPage<NoticeResp> convert = page.convert(notice -> BeanUtil.copyProperties(notice, NoticeResp.class));
         return ApiResponse.success(convert);
