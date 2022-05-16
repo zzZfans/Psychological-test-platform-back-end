@@ -2,7 +2,6 @@ package com.cqjtu.mindassess.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
@@ -10,7 +9,6 @@ import com.cqjtu.mindassess.common.SaveGroup;
 import com.cqjtu.mindassess.common.UpdateGroup;
 import com.cqjtu.mindassess.entity.Notice;
 import com.cqjtu.mindassess.entity.User;
-import com.cqjtu.mindassess.pojo.req.automessage.AutoMessageReq;
 import com.cqjtu.mindassess.pojo.req.notice.NoticePageReq;
 import com.cqjtu.mindassess.pojo.req.notice.NoticeReq;
 import com.cqjtu.mindassess.pojo.resp.notice.NoticeResp;
@@ -19,8 +17,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.function.Function;
 
 /**
  * <p>
@@ -65,7 +61,7 @@ public class NoticeController {
     }
 
     @ApiOperation(value = "公告分页查询")
-    @GetMapping("/page")
+    @PostMapping("/page")
     public ApiResponse<?> delete(@RequestBody NoticePageReq pageReq) {
         Page<Notice> page = noticeService.page(new Page<>(pageReq.getPage(), pageReq.getPageSize()));
         IPage<NoticeResp> convert = page.convert(notice -> BeanUtil.copyProperties(notice, NoticeResp.class));
