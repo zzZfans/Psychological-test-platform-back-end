@@ -17,6 +17,7 @@ import com.cqjtu.mindassess.pojo.resp.pushrecord.PushRecordResp;
 import com.cqjtu.mindassess.service.IAutoMessageService;
 import com.cqjtu.mindassess.service.IPushRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cqjtu.mindassess.util.HtmlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,8 @@ public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRec
     @Override
     public Boolean saveRecord(PushRecordReq req) {
         Long pusherId = ((User) StpUtil.getSession().get("user")).getId();
-        if (sensitiveWordService.judgeSensitivityWord(req.getMessage()))  {
+        String content = HtmlUtil.getContent(req.getMessage());
+        if (sensitiveWordService.judgeSensitivityWord(content)) {
             throw new BusinessException("存在敏感词");
         }
         PushRecord pushRecord = new PushRecord();
