@@ -335,13 +335,9 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
      */
     private UserAnalysisResp getAnalysisDetail(UserAnalysisResp resp, Map<String, List<AssessResult>> collect) {
         Map<String, Integer> analysisDetail = new HashMap<>();
-
-
         //最近一次的异常
         Map<String, Integer> nearExc = resp.getNearExc();
-
         Map<String, Integer> nearNormalCount = resp.getNearNormalCount();
-
         Map<String, Integer> nearTerrorBackCount = resp.getNearTerrorBackCount();
         //最近的最严重的异常等级
         Map<String, Integer> nearTerror = resp.getNearTerror();

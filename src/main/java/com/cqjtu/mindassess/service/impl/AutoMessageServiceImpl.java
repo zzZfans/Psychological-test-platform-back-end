@@ -15,6 +15,7 @@ import com.cqjtu.mindassess.pojo.resp.automessage.AutoMessageResp;
 import com.cqjtu.mindassess.service.IAutoMessageService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.util.EmptyChecker;
+import com.cqjtu.mindassess.util.HtmlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,8 @@ public class AutoMessageServiceImpl extends ServiceImpl<AutoMessageMapper, AutoM
     @Override
     public boolean saveAutoMessage(AutoMessageReq messageReq) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
-        if (sensitiveWordService.judgeSensitivityWord(messageReq.getMessage())) {
+        String content = HtmlUtil.getContent(messageReq.getMessage());
+        if (sensitiveWordService.judgeSensitivityWord(content)) {
             throw new BusinessException("存在敏感词");
         }
         AutoMessage autoMessage = new AutoMessage();
