@@ -397,7 +397,6 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
                     }
                     Integer nearTerrorBackNum = resp.getNearTerrorBackCount().get(next.getKey());
                     Integer nearExcNum = resp.getNearExc().get(next.getKey());
-
                     //判定结果为重度的情况
                     if (nearTerrorBackNum < LevelVoteThresholdCons.SEVERE_TO_MEDIUM) {
                         analysisDetail.put(next.getKey(), AssessLevelCons.SEVERE);

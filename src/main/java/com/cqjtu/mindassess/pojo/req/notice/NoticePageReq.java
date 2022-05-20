@@ -18,4 +18,7 @@ public class NoticePageReq {
             example = "5"
     )
     private int pageSize = 5;
+
+    @ApiModelProperty("公告标题")
+    private String title;
 }

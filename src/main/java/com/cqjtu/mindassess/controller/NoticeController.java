@@ -2,6 +2,7 @@ package com.cqjtu.mindassess.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
@@ -13,6 +14,7 @@ import com.cqjtu.mindassess.pojo.req.notice.NoticePageReq;
 import com.cqjtu.mindassess.pojo.req.notice.NoticeReq;
 import com.cqjtu.mindassess.pojo.resp.notice.NoticeResp;
 import com.cqjtu.mindassess.service.INoticeService;
+import com.cqjtu.mindassess.util.EmptyChecker;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author auther
@@ -33,7 +35,7 @@ public class NoticeController {
     INoticeService noticeService;
 
     @ApiOperation(value = "添加公告")
-    @PostMapping("/save")
+    @PostMapping("/add")
     public ApiResponse<?> save(@RequestBody @Validated(SaveGroup.class) NoticeReq req) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
         Notice notice = BeanUtil.copyProperties(req, Notice.class);
@@ -63,7 +65,9 @@ public class NoticeController {
     @ApiOperation(value = "公告分页查询")
     @PostMapping("/page")
     public ApiResponse<?> page(@RequestBody NoticePageReq pageReq) {
-        Page<Notice> page = noticeService.page(new Page<>(pageReq.getPage(), pageReq.getPageSize()));
+        Page<Notice> page = noticeService.page(new Page<>(pageReq.getPage(), pageReq.getPageSize()),
+                new LambdaQueryWrapper<Notice>()
+                        .like(EmptyChecker.notEmpty(pageReq.getTitle()), Notice::getNoticeTitle, pageReq.getTitle()));
         IPage<NoticeResp> convert = page.convert(notice -> BeanUtil.copyProperties(notice, NoticeResp.class));
         return ApiResponse.success(convert);
     }
