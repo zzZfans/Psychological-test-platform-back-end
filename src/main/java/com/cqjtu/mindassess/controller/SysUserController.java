@@ -196,7 +196,7 @@ public class SysUserController {
 
 
     @ApiOperation("获取用户信息")
-    @SaCheckRole(value = {"general", "admin", "游客"}, mode = SaMode.OR)
+    @SaCheckRole(value = {"系统管理员", "心理健康运营人员", "普通用户", "游客"}, mode = SaMode.OR)
     @GetMapping("/info")
     public ApiResponse<?> userInfo() {
         String username = (String) StpUtil.getLoginId();

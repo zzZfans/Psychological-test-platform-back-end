@@ -14,7 +14,6 @@ import com.cqjtu.mindassess.util.EmptyChecker;
 import com.cqjtu.mindassess.util.MD5Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements
     /**
      * 创建普通用户时，默认的角色
      */
-    private static final String CREATE_USER_DEFAULT_ROLE = "general";
+    private static final String CREATE_USER_DEFAULT_ROLE = "普通用户";
 
 
     @Override
