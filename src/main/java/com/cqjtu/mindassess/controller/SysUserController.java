@@ -169,9 +169,9 @@ public class SysUserController {
         LocalDateTime loginTime = LocalDateTime.now();
 
         userService.update(new LambdaUpdateWrapper<User>()
-                .set(User::getLastLoginIp,loginIp)
-                .set(User::getLastLoginTime,loginTime)
-                .eq(User::getId,user.getId()));
+                .set(User::getLastLoginIp, loginIp)
+                .set(User::getLastLoginTime, loginTime)
+                .eq(User::getId, user.getId()));
 
         return ApiResponse.success(loginSuccessVo);
 
@@ -196,7 +196,7 @@ public class SysUserController {
 
 
     @ApiOperation("获取用户信息")
-    @SaCheckRole(value = {"general", "admin"}, mode = SaMode.OR)
+    @SaCheckRole(value = {"general", "admin", "游客"}, mode = SaMode.OR)
     @GetMapping("/info")
     public ApiResponse<?> userInfo() {
         String username = (String) StpUtil.getLoginId();
@@ -234,7 +234,7 @@ public class SysUserController {
     // MinIO存储，User表更新
     @ApiOperation("头像上传")
     @PostMapping("/avatar/upload")
-    public ApiResponse<?> avatarUpload(@RequestParam(value = "file", required = false)MultipartFile multipartFile) {
+    public ApiResponse<?> avatarUpload(@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         if (ObjectUtils.isEmpty(multipartFile)) {
             return ApiResponse.fail(200, "文件不能为空");
         }
@@ -255,7 +255,7 @@ public class SysUserController {
     // MinIO上传，User表更新
     @ApiOperation("用户人脸源图上传")
     @PostMapping("/face/upload")
-    public ApiResponse<?> faceUpload(@RequestParam(value = "file", required = false)MultipartFile multipartFile) {
+    public ApiResponse<?> faceUpload(@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         if (ObjectUtils.isEmpty(multipartFile)) {
             return ApiResponse.fail(200, "人脸识别源图不能为空");
         }
@@ -275,20 +275,20 @@ public class SysUserController {
 
     /**
      * 逻辑：
-     *  1.验证码验证码是否正确
-     *  2.修改密码
+     * 1.验证码验证码是否正确
+     * 2.修改密码
      */
     @ApiOperation("通过手机验证码修改密码(需登录状态)")
     @PostMapping("/updatePasswordByMobileCaptcha")
-    public ApiResponse<?> updatePasswordByMobileCaptcha(@Validated @RequestBody UserUpdatePasswordByMobileDto dto){
+    public ApiResponse<?> updatePasswordByMobileCaptcha(@Validated @RequestBody UserUpdatePasswordByMobileDto dto) {
         boolean legitimate = captchaService.confirmCode(
                 dto.getMobile(),
                 dto.getMobileCaptcha(),
                 CaptchaTypeEnum.MOBILE,
                 CaptchaSceneEnum.UPDATE_PASSWORD);
 
-        if(Boolean.FALSE.equals(legitimate)){
-            return ApiResponse.fail(200,"验证码错误");
+        if (Boolean.FALSE.equals(legitimate)) {
+            return ApiResponse.fail(200, "验证码错误");
         }
         User user = userService.queryUserByUsername(((String) StpUtil.getLoginId()));
 
@@ -296,37 +296,37 @@ public class SysUserController {
 
         user.setPassword(encryptionPassword);
 
-        if(userService.updateById(user)){
+        if (userService.updateById(user)) {
             return ApiResponse.success();
         }
-        return ApiResponse.fail(200,"密码修改失败");
+        return ApiResponse.fail(200, "密码修改失败");
     }
 
 
     /**
      * 逻辑：
-     *  1.验证码手机验证码是否正确
-     *  2.修改用户手机号码
+     * 1.验证码手机验证码是否正确
+     * 2.修改用户手机号码
      */
     @ApiOperation("通过手机验证码修改手机号(需登录状态)")
     @PostMapping("/updatePhonenumberByMobileCaptcha")
-    public ApiResponse<?> updatePhoneNumberByMobileCaptcha(@Validated @RequestBody UserUpdatePhoneNumberByMobileDto dto){
+    public ApiResponse<?> updatePhoneNumberByMobileCaptcha(@Validated @RequestBody UserUpdatePhoneNumberByMobileDto dto) {
         String newPhoneNumber = dto.getPhoneNumber();
         boolean legitimate = captchaService.confirmCode(newPhoneNumber,
                 dto.getCaptcha(),
                 CaptchaTypeEnum.MOBILE,
                 CaptchaSceneEnum.UPDATE_MOBILE_PHONE_NUMBER);
-        if(Boolean.FALSE.equals(legitimate)){
-            return ApiResponse.fail(200,"验证码错误");
+        if (Boolean.FALSE.equals(legitimate)) {
+            return ApiResponse.fail(200, "验证码错误");
         }
         User user = userService.queryUserByUsername(((String) StpUtil.getLoginId()));
         user.setPassword(newPhoneNumber);
 
         boolean updateSuccess = userService.updateById(user);
-        if(updateSuccess){
+        if (updateSuccess) {
             return ApiResponse.success();
         }
-        return ApiResponse.fail(200,"修改失败");
+        return ApiResponse.fail(200, "修改失败");
     }
 
 
@@ -334,7 +334,7 @@ public class SysUserController {
     // 个人基本设置
     @ApiOperation("用户基本设置")
     @PostMapping("/updateBaseInfo")
-    public ApiResponse<?> updateBaseInfo(@RequestBody UserBaseInfoVo userBaseInfoVo){
+    public ApiResponse<?> updateBaseInfo(@RequestBody UserBaseInfoVo userBaseInfoVo) {
 
 
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
@@ -349,16 +349,16 @@ public class SysUserController {
     // 个人密码设置
     @ApiOperation("用户密码更改")
     @PostMapping("/updatePasswordInfoByOldPassword")
-    public ApiResponse<?> updatePasswordInfo(@RequestBody UserPasswordInfoVo userPasswordInfoVo){
+    public ApiResponse<?> updatePasswordInfo(@RequestBody UserPasswordInfoVo userPasswordInfoVo) {
         UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<User>();
-        User user=((User)StpUtil.getSession().get("user"));
-        String salt=user.getSalt();  // 原salt
+        User user = ((User) StpUtil.getSession().get("user"));
+        String salt = user.getSalt();  // 原salt
         Long userId = user.getId();
         String encryptionPassword = MD5Util.encryption(userPasswordInfoVo.getPassword() + salt);
-        System.out.println("原密码"+encryptionPassword);
+        System.out.println("原密码" + encryptionPassword);
         if (user.getPassword().equals(encryptionPassword)) {
             String newencryptionPassword = MD5Util.encryption(userPasswordInfoVo.getNewPassword() + salt);
-            System.out.println("新密码"+newencryptionPassword);
+            System.out.println("新密码" + newencryptionPassword);
             user.setPassword(newencryptionPassword);
             StpUtil.getSession().set("user", user);
             userUpdateWrapper.set("password", newencryptionPassword)
@@ -366,8 +366,8 @@ public class SysUserController {
 
             boolean update = userService.update(userUpdateWrapper);
             return ApiResponse.success(update);
-        }else {
-            return ApiResponse.fail(200,"密码更改失败");
+        } else {
+            return ApiResponse.fail(200, "密码更改失败");
         }
     }
 
