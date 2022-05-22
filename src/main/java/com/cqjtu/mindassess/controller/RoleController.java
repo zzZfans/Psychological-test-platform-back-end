@@ -1,13 +1,11 @@
 package com.cqjtu.mindassess.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.Permission;
 import com.cqjtu.mindassess.entity.Role;
 import com.cqjtu.mindassess.entity.RolePermission;
-import com.cqjtu.mindassess.entity.User;
+import com.cqjtu.mindassess.entity.UserRole;
 import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.pojo.req.role.RoleDto;
 import com.cqjtu.mindassess.pojo.vo.PermissionInfoVo;
@@ -16,16 +14,18 @@ import com.cqjtu.mindassess.pojo.vo.RolePermissionInfoVo;
 import com.cqjtu.mindassess.service.IPermissionService;
 import com.cqjtu.mindassess.service.IRolePermissionService;
 import com.cqjtu.mindassess.service.IRoleService;
+import com.cqjtu.mindassess.service.IUserRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +42,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/role")
 public class RoleController {
 
+    @Autowired
+    IUserRoleService userRoleService;
+
     @Resource
     IRoleService roleService;
     @Resource
@@ -49,9 +52,9 @@ public class RoleController {
     @Resource
     IRolePermissionService rolePermissionService;
 
-    @ApiOperation("查询角色列表")
+    @ApiOperation("查询角色（带权限）列表")
     @GetMapping("/list/andPermissionList")
-    public ApiResponse<?> roleList() {
+    public ApiResponse<?> roleListWithPermissionList() {
         RolePermissionInfoVo result = new RolePermissionInfoVo();
         List<RoleInfoVo> roleInfoVos = roleService.listRoleInfo();
         List<PermissionInfoVo> permissionInfoVos = permissionService.listPermissionInfoVos();
@@ -60,11 +63,41 @@ public class RoleController {
         return ApiResponse.success(result);
     }
 
+    @ApiOperation("查询角色列表")
+    @GetMapping("/list")
+    public ApiResponse<?> roleList() {
+        return ApiResponse.success(
+                roleService
+                        .list()
+                        .stream()
+                        .map((role) -> new HashMap<String, Object>() {{
+                            put("id", role.getId());
+                            put("name", role.getRoleName());
+                        }})
+                        .collect(Collectors.toList()));
+    }
+
+    @ApiOperation("查询用户角色列表")
+    @GetMapping("/list/{userId}")
+    public ApiResponse<?> userRoleList(@PathVariable Long userId) {
+        return ApiResponse.success(
+                roleService
+                        .listByIds(userRoleService
+                                .queryUserRoleByUserId(userId)
+                                .stream()
+                                .map(UserRole::getRoleId)
+                                .collect(Collectors.toList()))
+                        .stream()
+                        .map(Role::getRoleName)
+                        .collect(Collectors.toList())
+        );
+    }
+
     @ApiOperation("添加角色或修改角色")
     @PostMapping("/saveOrUpdate")
     public ApiResponse<?> saveOrUpdate(@Validated @RequestBody RoleDto dto) {
         // 判断是否存在该角色名
-        if(!ObjectUtils.isEmpty(roleService.queryRoleByName(dto.getRoleName()))){
+        if (!ObjectUtils.isEmpty(roleService.queryRoleByName(dto.getRoleName()))) {
             throw new BusinessException("当前角色已经存在");
         }
         Role role = new Role();
@@ -131,14 +164,14 @@ public class RoleController {
                 .map(RolePermission::getPermissionId)
                 .collect(Collectors.toList());
 
-        if( ObjectUtils.isEmpty(permissionIds)){
+        if (ObjectUtils.isEmpty(permissionIds)) {
             List<Permission> list = new ArrayList<>();
             return ApiResponse.success(list);
         }
 
         List<Permission> list = permissionService.list(
                 new LambdaQueryWrapper<Permission>()
-                        .in(Permission::getId,permissionIds)
+                        .in(Permission::getId, permissionIds)
                         .orderByAsc(Permission::getSort));
 
         List<Long> sortedPermissionIds = list.stream().map(Permission::getId).collect(Collectors.toList());

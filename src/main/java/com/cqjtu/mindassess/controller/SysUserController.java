@@ -6,25 +6,26 @@ import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.User;
+import com.cqjtu.mindassess.entity.UserRole;
 import com.cqjtu.mindassess.enums.CaptchaSceneEnum;
 import com.cqjtu.mindassess.enums.CaptchaTypeEnum;
 import com.cqjtu.mindassess.exception.BusinessException;
 import com.cqjtu.mindassess.pojo.req.user.*;
 import com.cqjtu.mindassess.pojo.vo.user.*;
-import com.cqjtu.mindassess.service.ICaptchaService;
-import com.cqjtu.mindassess.service.IFileService;
-import com.cqjtu.mindassess.service.IShortMessageCodeService;
-import com.cqjtu.mindassess.service.ISysUserService;
+import com.cqjtu.mindassess.service.*;
 import com.cqjtu.mindassess.util.EmptyChecker;
 import com.cqjtu.mindassess.util.IPUtils;
 import com.cqjtu.mindassess.util.MD5Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +35,17 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Api(tags = {"用户控制器"})
 @RestController
 @RequestMapping("/user")
 public class SysUserController {
 
+    @Autowired
+    IUserRoleService userRoleService;
     @Resource
     IShortMessageCodeService smService;
     @Resource
@@ -221,7 +226,7 @@ public class SysUserController {
                                    @Validated @RequestBody UserPagingConditionDto conditionDto) {
         Page<User> page = userService.page(new Page<User>(current, size),
                 new LambdaQueryWrapper<User>()
-                        .eq(EmptyChecker.notEmpty(conditionDto.getUsername()), User::getUsername, conditionDto.getUsername())
+                        .like(EmptyChecker.notEmpty(conditionDto.getUsername()), User::getUsername, conditionDto.getUsername())
                         .eq(EmptyChecker.notEmpty(conditionDto.getStatus()), User::getStatus, conditionDto.getStatus()));
         List<User> records = page.getRecords();
         Long total = page.getTotal();
@@ -343,6 +348,31 @@ public class SysUserController {
                 .set("email_address", userBaseInfoVo.getUpdateUserAddress()).eq("id", userId);
 
         boolean update = userService.update(userUpdateWrapper);
+        return ApiResponse.success(update);
+    }
+
+    @ApiOperation("更新用户状态和角色列表")
+    @PostMapping("/updateStatusAndRoles")
+    @Transactional
+    public ApiResponse<?> updateStatusAndRoles(@RequestBody Map<String, Object> data) {
+
+        Long userId = Long.valueOf(data.get("id").toString());
+        Integer status = (Integer) data.get("status");
+        List<Object> roleIdList = (List<Object>) data.get("roleIdList");
+
+        UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
+        userUpdateWrapper.set("status", status).eq("id", userId);
+        boolean update = userService.update(userUpdateWrapper);
+
+        userRoleService.remove(new QueryWrapper<UserRole>().eq("user_id", userId));
+
+        userRoleService.saveBatch(
+                roleIdList
+                        .stream()
+                        .map(roleId -> new UserRole(userId, Long.valueOf(roleId.toString())))
+                        .collect(Collectors.toList())
+                , roleIdList.size());
+
         return ApiResponse.success(update);
     }
 
