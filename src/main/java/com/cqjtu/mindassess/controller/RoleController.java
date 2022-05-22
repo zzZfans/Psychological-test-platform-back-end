@@ -97,7 +97,7 @@ public class RoleController {
     @PostMapping("/saveOrUpdate")
     public ApiResponse<?> saveOrUpdate(@Validated @RequestBody RoleDto dto) {
         // 判断是否存在该角色名
-        if (!ObjectUtils.isEmpty(roleService.queryRoleByName(dto.getRoleName()))) {
+        if (dto.getId() == null && !ObjectUtils.isEmpty(roleService.queryRoleByName(dto.getRoleName()))) {
             throw new BusinessException("当前角色已经存在");
         }
         Role role = new Role();
