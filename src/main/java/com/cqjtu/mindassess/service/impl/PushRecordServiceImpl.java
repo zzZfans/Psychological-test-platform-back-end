@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqjtu.mindassess.util.HtmlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRec
     @Override
     public Boolean saveRecord(PushRecordReq req) {
         Long pusherId = ((User) StpUtil.getSession().get("user")).getId();
-        String content = HtmlUtil.getContent(req.getMessage());
+        String content = HtmlUtils.htmlEscape(req.getMessage());
         if (sensitiveWordService.judgeSensitivityWord(content)) {
             throw new BusinessException("存在敏感词");
         }

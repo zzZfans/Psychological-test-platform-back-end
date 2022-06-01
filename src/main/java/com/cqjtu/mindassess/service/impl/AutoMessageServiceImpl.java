@@ -18,6 +18,7 @@ import com.cqjtu.mindassess.util.EmptyChecker;
 import com.cqjtu.mindassess.util.HtmlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 
 /**
@@ -37,7 +38,7 @@ public class AutoMessageServiceImpl extends ServiceImpl<AutoMessageMapper, AutoM
     @Override
     public boolean saveAutoMessage(AutoMessageReq messageReq) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
-        String content = HtmlUtil.getContent(messageReq.getMessage());
+        String content = HtmlUtils.htmlEscape(messageReq.getMessage());
         if (sensitiveWordService.judgeSensitivityWord(content)) {
             throw new BusinessException("存在敏感词");
         }
