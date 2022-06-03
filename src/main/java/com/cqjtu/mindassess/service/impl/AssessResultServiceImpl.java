@@ -13,10 +13,7 @@ import com.cqjtu.mindassess.constans.LevelVoteThresholdCons;
 import com.cqjtu.mindassess.entity.AssessResult;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.mapper.AssessResultMapper;
-import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
-import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
-import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
-import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
+import com.cqjtu.mindassess.pojo.req.assess.*;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
@@ -120,7 +117,7 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
     }
 
     @Override
-    public UserAnalysisResp getAnalysis(Long userId) {
+    public UserAnalysisResp getAnalysis(AnalysisReq req) {
         //获取近期一个月的情况
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -130,8 +127,10 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
         date = calendar.getTime();
         //上一个月的所有记录,降序排序
-        List<AssessResult> list = list(new LambdaQueryWrapper<AssessResult>().eq(AssessResult::getUserId, userId)
-                .gt(AssessResult::getCreateTime, date).orderByDesc(AssessResult::getCreateTime));
+        List<AssessResult> list = list(new LambdaQueryWrapper<AssessResult>().eq(AssessResult::getUserId, req.getUserId())
+                .gt(AssessResult::getCreateTime, (EmptyChecker.isEmpty(req.getStartTime()) ? date: req.getStartTime()))
+                .lt(AssessResult::getCreateTime, (EmptyChecker.isEmpty(req.getStartTime()) ? new Date() : req.getEndTime()))
+                .orderByDesc(AssessResult::getCreateTime));
         //最近没有记录的话直接返回
         if (list.size() == 0) {
             return new UserAnalysisResp();
@@ -180,8 +179,8 @@ public class AssessResultServiceImpl extends ServiceImpl<AssessResultMapper, Ass
     }
 
     @Override
-    public Map<String, Integer> getUserAnalysis(Long userId) {
-        return getAnalysis(userId).getAnalysisDetails();
+    public Map<String, Integer> getUserAnalysis(AnalysisReq req) {
+        return getAnalysis(req).getAnalysisDetails();
     }
 
     /**

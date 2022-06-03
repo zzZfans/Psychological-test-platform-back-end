@@ -45,13 +45,13 @@ public class PushAdviceTask {
         PushRecord push;
         List<AutoMessage> collect;
         AutoMessage autoMessage1;
-
         autoMessages = autoMessageService.list();
         for (UserAssessBo assess : proUserList) {
             Random rand = new Random();
             push = new PushRecord();
             collect = autoMessages.stream()
-                    .filter(autoMessage -> autoMessage.getType().equals(assess.getAssessType()) || "all".equals(autoMessage.getType())).collect(Collectors.toList());
+                    .filter(autoMessage -> autoMessage.getType().equals(assess.getAssessType())
+                            || "all".equals(autoMessage.getType())).collect(Collectors.toList());
             if (collect.size() > 0) {
                 //随机获取对应类型的一条消息
                 int index = rand.nextInt(Math.max((collect.size() - 1), 1));

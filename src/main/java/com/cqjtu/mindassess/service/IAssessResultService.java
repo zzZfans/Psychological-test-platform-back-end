@@ -3,10 +3,7 @@ package com.cqjtu.mindassess.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqjtu.mindassess.entity.AssessResult;
-import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
-import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
-import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
-import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
+import com.cqjtu.mindassess.pojo.req.assess.*;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
@@ -55,7 +52,7 @@ public interface IAssessResultService extends IService<AssessResult> {
      * 个人状态分析
      * @return
      */
-    UserAnalysisResp getAnalysis(Long userId);
+    UserAnalysisResp getAnalysis(AnalysisReq req);
 
     /**
      * 获取用户测试记录列表
@@ -74,9 +71,9 @@ public interface IAssessResultService extends IService<AssessResult> {
 
     /**
      * 获取用户分析结果
-     * @param userId
+     * @param req
      * @return
      */
-    Map<String, Integer> getUserAnalysis(Long userId);
+    Map<String, Integer> getUserAnalysis(AnalysisReq req);
 
 }

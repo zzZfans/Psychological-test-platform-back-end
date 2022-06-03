@@ -6,10 +6,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.User;
-import com.cqjtu.mindassess.pojo.req.assess.AssessResultPageReq;
-import com.cqjtu.mindassess.pojo.req.assess.AssessResultReq;
-import com.cqjtu.mindassess.pojo.req.assess.RecordCountReq;
-import com.cqjtu.mindassess.pojo.req.assess.UserAssessRecordPageReq;
+import com.cqjtu.mindassess.pojo.req.assess.*;
 import com.cqjtu.mindassess.pojo.resp.assess.AssessResultResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAnalysisResp;
 import com.cqjtu.mindassess.pojo.resp.assess.UserAssessResp;
@@ -87,10 +84,11 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "获取个人状况分析")
-    @GetMapping("/getAnalysis")
-    public ApiResponse<?> getAnalysis() {
+    @PostMapping("/getAnalysis")
+    public ApiResponse<?> getAnalysis(@RequestBody AnalysisReq req) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
-        UserAnalysisResp re = assessResultService.getAnalysis(userId);
+        req.setUserId(userId);
+        UserAnalysisResp re = assessResultService.getAnalysis(req);
         return ApiResponse.success(re);
     }
 
@@ -109,9 +107,9 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "获取用户历史测试记录列表")
-    @GetMapping("/getUserAnalysis/{userId}")
-    public ApiResponse<?> getUserAnalysis(@PathVariable Long userId) {
-        Map<String, Integer> userAssessRecord = assessResultService.getUserAnalysis(userId);
+    @PostMapping("/getUserAnalysis")
+    public ApiResponse<?> getUserAnalysis(@RequestBody AnalysisReq req) {
+        Map<String, Integer> userAssessRecord = assessResultService.getUserAnalysis(req);
         return ApiResponse.success(userAssessRecord);
     }
 
