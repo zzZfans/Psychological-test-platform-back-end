@@ -1,6 +1,7 @@
 package com.cqjtu.mindassess.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.Permission;
 import com.cqjtu.mindassess.entity.Role;
@@ -53,6 +54,7 @@ public class RoleController {
     IRolePermissionService rolePermissionService;
 
     @ApiOperation("查询角色（带权限）列表")
+    @LogOperation("查询角色（带权限）列表")
     @GetMapping("/list/andPermissionList")
     public ApiResponse<?> roleListWithPermissionList() {
         RolePermissionInfoVo result = new RolePermissionInfoVo();
@@ -64,6 +66,7 @@ public class RoleController {
     }
 
     @ApiOperation("查询角色列表")
+    @LogOperation("查询角色列表")
     @GetMapping("/list")
     public ApiResponse<?> roleList() {
         return ApiResponse.success(
@@ -78,6 +81,7 @@ public class RoleController {
     }
 
     @ApiOperation("查询用户角色列表")
+    @LogOperation("查询用户角色列表")
     @GetMapping("/list/{userId}")
     public ApiResponse<?> userRoleList(@PathVariable Long userId) {
         return ApiResponse.success(
@@ -94,6 +98,7 @@ public class RoleController {
     }
 
     @ApiOperation("添加角色或修改角色")
+    @LogOperation("添加角色或修改角色")
     @PostMapping("/saveOrUpdate")
     public ApiResponse<?> saveOrUpdate(@Validated @RequestBody RoleDto dto) {
         // 判断是否存在该角色名
@@ -152,6 +157,7 @@ public class RoleController {
 
 
     @ApiOperation("查询指定角色id下所有权限")
+    @LogOperation("查询指定角色id下所有权限")
     @GetMapping("/permissionIdList/{id}")
     public ApiResponse<?> rolePermissionListById(@PathVariable Long id) {
         if (ObjectUtils.isEmpty(roleService.getById(id))) {
@@ -179,6 +185,7 @@ public class RoleController {
     }
 
     @ApiOperation("根据角色id删除角色")
+    @LogOperation("根据角色id删除角色")
     @DeleteMapping("/delete/{id}")
     public ApiResponse<?> deleteByRoleId(@PathVariable(value = "id") Long roleId) {
         if (ObjectUtils.isEmpty(roleService.getById(roleId))) {

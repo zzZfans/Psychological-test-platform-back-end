@@ -3,6 +3,7 @@ package com.cqjtu.mindassess.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.Permission;
 import com.cqjtu.mindassess.entity.RolePermission;
@@ -16,10 +17,7 @@ import com.cqjtu.mindassess.service.IRolePermissionService;
 import com.cqjtu.mindassess.util.EmptyChecker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Delete;
-import org.simpleframework.xml.core.Validate;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +57,7 @@ public class PermissionController {
 
 
     @ApiOperation("添加权限")
+    @LogOperation("添加权限")
     @PostMapping("/add")
     public ApiResponse<?> addMenuPermission(@Validated @RequestBody PermissionDto permissionDto) {
         Integer type = permissionDto.getPermissionType();
@@ -99,6 +98,7 @@ public class PermissionController {
     }
 
     @ApiOperation("按照层级关系查询系统所有权限")
+    @LogOperation("按照层级关系查询系统所有权限")
     @GetMapping("/list")
     public ApiResponse<?> permissionList(){
         List<PermissionVo> permissionVos = permissionService.queryPermissionWithRelation();
@@ -107,6 +107,7 @@ public class PermissionController {
 
 
     @ApiOperation("删除权限")
+    @LogOperation("删除权限")
     @DeleteMapping("/delete/{id}")
     public ApiResponse<?> permissionDelete(@PathVariable("id") Long id){
         // 1.判断要删除的权限是否存在
@@ -124,6 +125,7 @@ public class PermissionController {
     }
 
     @ApiOperation("修改权限")
+    @LogOperation("修改权限")
     @PostMapping("/update")
     public ApiResponse<?> permissionUpdate(@Validated @RequestBody PermissionUpdateDto dto){
         Permission entity = new Permission();

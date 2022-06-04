@@ -1,5 +1,6 @@
 package com.cqjtu.mindassess.controller;
 
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.enums.ShortMessageScenes;
 import com.cqjtu.mindassess.service.IShortMessageCodeService;
@@ -34,6 +35,7 @@ public class ShortMessageController {
             @ApiImplicitParam(name = "phoneNumber",value = "电话号码")
     })
     @ApiOperation(value = "注册时短信验证码")
+    @LogOperation(value = "注册时短信验证码")
     @GetMapping("/code/register")
     public ApiResponse<?> requestSmCodeForRegister(@RequestParam("phoneNumber") String phoneNumber){
         long expireTime = shortMessageCodeService.requestSmCode(phoneNumber, ShortMessageScenes.SM_REGISTER.scenes);
@@ -47,6 +49,7 @@ public class ShortMessageController {
             @ApiImplicitParam(name = "phoneNumber",value = "电话号码")
     })
     @ApiOperation(value = "登录时短信验证码")
+    @LogOperation(value = "登录时短信验证码")
     @GetMapping("/code/login")
     public ApiResponse<?> requestSmCodeForLogin(@RequestParam("phoneNumber") String phoneNumber){
         long expireTime = shortMessageCodeService.requestSmCode(phoneNumber, ShortMessageScenes.SM_LOGIN.scenes);

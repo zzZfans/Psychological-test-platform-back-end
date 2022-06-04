@@ -5,6 +5,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.common.SaveGroup;
 import com.cqjtu.mindassess.common.UpdateGroup;
@@ -35,6 +36,7 @@ public class NoticeController {
     INoticeService noticeService;
 
     @ApiOperation(value = "添加公告")
+    @LogOperation(value = "添加公告")
     @PostMapping("/add")
     public ApiResponse<?> save(@RequestBody @Validated(SaveGroup.class) NoticeReq req) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
@@ -46,6 +48,7 @@ public class NoticeController {
     }
 
     @ApiOperation(value = "修改公告")
+    @LogOperation(value = "修改公告")
     @PostMapping("/update")
     public ApiResponse<?> update(@RequestBody @Validated(UpdateGroup.class) NoticeReq req) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
@@ -56,6 +59,7 @@ public class NoticeController {
     }
 
     @ApiOperation(value = "删除公告")
+    @LogOperation(value = "删除公告")
     @GetMapping("/delete/{id}")
     public ApiResponse<?> delete(@PathVariable Long id) {
         boolean re = noticeService.removeById(id);
@@ -63,6 +67,7 @@ public class NoticeController {
     }
 
     @ApiOperation(value = "公告分页查询")
+    @LogOperation(value = "公告分页查询")
     @PostMapping("/page")
     public ApiResponse<?> page(@RequestBody NoticePageReq pageReq) {
         Page<Notice> page = noticeService.page(new Page<>(pageReq.getPage(), pageReq.getPageSize()),

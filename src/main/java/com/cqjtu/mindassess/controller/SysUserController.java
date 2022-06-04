@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.entity.UserRole;
@@ -85,6 +86,7 @@ public class SysUserController {
 
 
     @ApiOperation("用户注册")
+    @LogOperation("用户注册")
     @PostMapping("/register")
     public ApiResponse<?> register(@Validated @RequestBody UserSmRegisterDto dto) {
         /**
@@ -121,6 +123,7 @@ public class SysUserController {
 
 
     @ApiOperation("用户登录")
+    @LogOperation("用户登录")
     @PostMapping("/login")
     public ApiResponse<?> login(@Validated @RequestBody UserSmLoginDto dto, HttpServletRequest request) {
         /**
@@ -184,6 +187,7 @@ public class SysUserController {
 
 
     @ApiOperation("用户登出")
+    @LogOperation("用户登出")
     @GetMapping("/logout")
     public ApiResponse<?> logout() {
         if (StpUtil.isLogin()) {
@@ -194,6 +198,7 @@ public class SysUserController {
     }
 
     @ApiOperation("测试是否登录")
+    @LogOperation("测试是否登录")
     @GetMapping("/test")
     public ApiResponse<?> test() {
         return ApiResponse.success(StpUtil.getLoginId());
@@ -201,6 +206,7 @@ public class SysUserController {
 
 
     @ApiOperation("获取用户信息")
+    @LogOperation("获取用户信息")
     @SaCheckRole(value = {"系统管理员", "心理健康运营人员", "普通用户", "游客"}, mode = SaMode.OR)
     @GetMapping("/info")
     public ApiResponse<?> userInfo() {
@@ -211,6 +217,7 @@ public class SysUserController {
 
 
     @ApiOperation("获取用户Nav")
+    @LogOperation("获取用户Nav")
     @GetMapping("/nav")
     public ApiResponse<?> userNav() {
         String username = (String) StpUtil.getLoginId();
@@ -220,6 +227,7 @@ public class SysUserController {
     }
 
     @ApiOperation("分页查询")
+    @LogOperation("分页查询")
     @PostMapping("/list")
     public ApiResponse<?> userList(@RequestParam("current") Long current,
                                    @RequestParam("pageSize") Long size,
@@ -238,6 +246,7 @@ public class SysUserController {
 
     // MinIO存储，User表更新
     @ApiOperation("头像上传")
+    @LogOperation("头像上传")
     @PostMapping("/avatar/upload")
     public ApiResponse<?> avatarUpload(@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         if (ObjectUtils.isEmpty(multipartFile)) {
@@ -259,6 +268,7 @@ public class SysUserController {
 
     // MinIO上传，User表更新
     @ApiOperation("用户人脸源图上传")
+    @LogOperation("用户人脸源图上传")
     @PostMapping("/face/upload")
     public ApiResponse<?> faceUpload(@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         if (ObjectUtils.isEmpty(multipartFile)) {
@@ -284,6 +294,7 @@ public class SysUserController {
      * 2.修改密码
      */
     @ApiOperation("通过手机验证码修改密码(需登录状态)")
+    @LogOperation("通过手机验证码修改密码(需登录状态)")
     @PostMapping("/updatePasswordByMobileCaptcha")
     public ApiResponse<?> updatePasswordByMobileCaptcha(@Validated @RequestBody UserUpdatePasswordByMobileDto dto) {
         boolean legitimate = captchaService.confirmCode(
@@ -314,6 +325,7 @@ public class SysUserController {
      * 2.修改用户手机号码
      */
     @ApiOperation("通过手机验证码修改手机号(需登录状态)")
+    @LogOperation("通过手机验证码修改手机号(需登录状态)")
     @PostMapping("/updatePhonenumberByMobileCaptcha")
     public ApiResponse<?> updatePhoneNumberByMobileCaptcha(@Validated @RequestBody UserUpdatePhoneNumberByMobileDto dto) {
         String newPhoneNumber = dto.getPhoneNumber();
@@ -338,6 +350,7 @@ public class SysUserController {
     // 个人设置
     // 个人基本设置
     @ApiOperation("用户基本设置")
+    @LogOperation("用户基本设置")
     @PostMapping("/updateBaseInfo")
     public ApiResponse<?> updateBaseInfo(@RequestBody UserBaseInfoVo userBaseInfoVo) {
 
@@ -352,6 +365,7 @@ public class SysUserController {
     }
 
     @ApiOperation("更新用户状态和角色列表")
+    @LogOperation("更新用户状态和角色列表")
     @PostMapping("/updateStatusAndRoles")
     @Transactional
     public ApiResponse<?> updateStatusAndRoles(@RequestBody Map<String, Object> data) {
@@ -378,6 +392,7 @@ public class SysUserController {
 
     // 个人密码设置
     @ApiOperation("用户密码更改")
+    @LogOperation("用户密码更改")
     @PostMapping("/updatePasswordInfoByOldPassword")
     public ApiResponse<?> updatePasswordInfo(@RequestBody UserPasswordInfoVo userPasswordInfoVo) {
         UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<User>();

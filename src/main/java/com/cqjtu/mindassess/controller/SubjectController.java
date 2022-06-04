@@ -1,6 +1,7 @@
 package com.cqjtu.mindassess.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.Subject;
 import com.cqjtu.mindassess.pojo.vo.subject.TextSubject;
@@ -44,6 +45,7 @@ public class SubjectController {
 
 
     @ApiOperation("获取文本测试的题目")
+    @LogOperation("获取文本测试的题目")
     @GetMapping("/text")
     public ApiResponse<?> textSubject() {
         List<Subject> subjectList = subjectService.list(new LambdaQueryWrapper<Subject>().eq(Subject::getType, TEXT_TYPE));

@@ -1,6 +1,6 @@
 package com.cqjtu.mindassess.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.service.IFileService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -27,6 +27,7 @@ public class FileController {
 
     @ApiOperationSupport(author = "zhangning")
     @ApiOperation("单个文件上传")
+    @LogOperation("单个文件上传")
 //    @SaCheckPermission(value = {"file-upload"},orRole = {"general"})
     @PostMapping("/upload")
     public ApiResponse<?> fileUpload(MultipartFile file){

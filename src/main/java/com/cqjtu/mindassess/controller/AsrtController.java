@@ -1,6 +1,6 @@
 package com.cqjtu.mindassess.controller;
 
-import cn.hutool.core.util.ObjectUtil;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.service.IAsrtService;
 import io.swagger.annotations.Api;
@@ -31,6 +31,7 @@ public class AsrtController {
 
 
     @ApiOperation("音频文件转换为文本")
+    @LogOperation("音频文件转换为文本")
     @PostMapping("/audioFileToText")
     public ApiResponse<?> audioFileToText(@RequestParam("audioFile")MultipartFile file) {
         if(ObjectUtils.isEmpty(file)){

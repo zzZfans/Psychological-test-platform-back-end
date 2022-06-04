@@ -2,6 +2,7 @@ package com.cqjtu.mindassess.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.constans.MessageStatusCons;
 import com.cqjtu.mindassess.entity.PushRecord;
@@ -33,6 +34,7 @@ public class PushRecordController {
     private IPushRecordService pushRecordService;
 
     @ApiOperation(value = "添加推送消息")
+    @LogOperation(value = "添加推送消息")
     @PostMapping("/save")
     public ApiResponse<?> save(@RequestBody @Validated PushRecordReq req) {
         boolean re = pushRecordService.saveRecord(req);
@@ -40,6 +42,7 @@ public class PushRecordController {
     }
 
     @ApiOperation(value = "获取推送记录")
+    @LogOperation(value = "获取推送记录")
     @GetMapping("/getPushHistory/{receiverId}")
     public ApiResponse<?> getPushHistory(@PathVariable Long receiverId) {
         List<PushRecordResp> re = pushRecordService.getPushHistory(receiverId);
@@ -47,6 +50,7 @@ public class PushRecordController {
     }
 
     @ApiOperation(value = "获取未读消息条数")
+    @LogOperation(value = "获取未读消息条数")
     @GetMapping("/getUnreadCount")
     public ApiResponse<?> getUnreadCount() {
         Integer re = pushRecordService.getUnreadCount();
@@ -54,6 +58,7 @@ public class PushRecordController {
     }
 
     @ApiOperation(value = "用户获取推送信息")
+    @LogOperation(value = "用户获取推送信息")
     @PostMapping("/getPushMessage")
     public ApiResponse<?> getPushMessage(@RequestBody MessagePageReq req) {
         Page<MessageResp> re = pushRecordService.getPushMessage(req);
@@ -61,6 +66,7 @@ public class PushRecordController {
     }
 
     @ApiOperation(value = "更新消息状态")
+    @LogOperation(value = "更新消息状态")
     @GetMapping("/readMessage/{msgId}")
     public ApiResponse<?> readMessage(@PathVariable Long msgId) {
         boolean update = pushRecordService.update(new UpdateWrapper<PushRecord>().set("status", MessageStatusCons.ALREADY)

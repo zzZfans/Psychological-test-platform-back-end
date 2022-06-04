@@ -4,6 +4,7 @@ package com.cqjtu.mindassess.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.entity.User;
 import com.cqjtu.mindassess.pojo.req.assess.*;
@@ -38,6 +39,7 @@ public class AssessResultController {
     IAssessResultService assessResultService;
 
     @ApiOperation(value = "添加记录")
+    @LogOperation(value = "添加记录")
     @PostMapping("/save")
     public ApiResponse<?> save(@RequestBody @Validated AssessResultReq assessResultReq) {
         boolean re = assessResultService.saveAssessResult(assessResultReq);
@@ -45,6 +47,7 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "删除记录")
+    @LogOperation(value = "删除记录")
     @GetMapping("/remove/{id}")
     public ApiResponse<?> remove(@PathVariable Long id) {
         boolean re = assessResultService.removeById(id);
@@ -53,6 +56,7 @@ public class AssessResultController {
 
 
     @ApiOperation(value = "查询记录")
+    @LogOperation(value = "查询记录")
     @PostMapping("/page")
     public ApiResponse<?> page(@RequestBody AssessResultPageReq pageReq) {
 
@@ -61,6 +65,7 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "查询用户个人记录")
+    @LogOperation(value = "查询用户个人记录")
     @PostMapping("/userPage")
     public ApiResponse<?> userPage(@RequestBody AssessResultPageReq pageReq) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
@@ -70,6 +75,7 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "查询用户每月测试以及异常统计查询")
+    @LogOperation(value = "查询用户每月测试以及异常统计查询")
     @PostMapping("/userRecordList")
     public ApiResponse<?> userRecordList(@RequestBody RecordCountReq req) {
         List<List<Integer>> lists = assessResultService.recordCount(req);
@@ -77,6 +83,7 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "获取年份")
+    @LogOperation(value = "获取年份")
     @GetMapping("/getYears")
     public ApiResponse<?> getYears() {
         List<Integer> re = assessResultService.getYears();
@@ -84,6 +91,7 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "获取个人状况分析")
+    @LogOperation(value = "获取个人状况分析")
     @PostMapping("/getAnalysis")
     public ApiResponse<?> getAnalysis(@RequestBody AnalysisReq req) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
@@ -93,6 +101,7 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "获取用户测试记录列表")
+    @LogOperation(value = "获取用户测试记录列表")
     @PostMapping("/getUserAssessRecord")
     public ApiResponse<?> getUserAssessRecord(@RequestBody UserAssessRecordPageReq req) {
         Page<UserAssessResp> userAssessRecord = assessResultService.getUserAssessRecord(req);
@@ -100,6 +109,7 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "获取用户历史测试记录列表")
+    @LogOperation(value = "获取用户历史测试记录列表")
     @PostMapping("/getUserHistoryList")
     public ApiResponse<?> getUserHistoryList(@RequestBody AssessResultPageReq req) {
         Page<AssessResultResp> userAssessRecord = assessResultService.getUserHistory(req);
@@ -107,6 +117,7 @@ public class AssessResultController {
     }
 
     @ApiOperation(value = "获取用户历史测试记录列表")
+    @LogOperation(value = "获取用户历史测试记录列表")
     @PostMapping("/getUserAnalysis")
     public ApiResponse<?> getUserAnalysis(@RequestBody AnalysisReq req) {
         Map<String, Integer> userAssessRecord = assessResultService.getUserAnalysis(req);

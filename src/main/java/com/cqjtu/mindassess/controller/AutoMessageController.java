@@ -3,6 +3,7 @@ package com.cqjtu.mindassess.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.common.SaveGroup;
 import com.cqjtu.mindassess.common.UpdateGroup;
@@ -36,6 +37,7 @@ public class AutoMessageController {
     IAutoMessageService autoMessageService;
 
     @ApiOperation(value = "添加消息")
+    @LogOperation(value = "添加消息")
     @PostMapping("/save")
     public ApiResponse<?> save(@RequestBody @Validated(SaveGroup.class) AutoMessageReq autoMessageReq) {
         boolean re = autoMessageService.saveAutoMessage(autoMessageReq);
@@ -43,6 +45,7 @@ public class AutoMessageController {
     }
 
     @ApiOperation(value = "更新消息")
+    @LogOperation(value = "更新消息")
     @PostMapping("/update")
     public ApiResponse<?> update(@RequestBody @Validated(UpdateGroup.class) AutoMessageReq autoMessageReq) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
@@ -53,6 +56,7 @@ public class AutoMessageController {
     }
 
     @ApiOperation(value = "分页查询消息")
+    @LogOperation(value = "分页查询消息")
     @PostMapping("/page")
     public ApiResponse<?> page(@RequestBody @Validated AutoMessagePageReq pageReq) {
         Page<AutoMessageResp> autoMessageRespPage = autoMessageService.pageList(pageReq);
@@ -60,6 +64,7 @@ public class AutoMessageController {
     }
 
     @ApiOperation(value = "删除消息")
+    @LogOperation(value = "删除消息")
     @GetMapping("/delete/{id}")
     public ApiResponse<?> page(@PathVariable Long id) {
         if (EmptyChecker.isEmpty(autoMessageService.getById(id))) {

@@ -1,5 +1,6 @@
 package com.cqjtu.mindassess.controller;
 
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.pojo.vo.AudioAnalysisVo;
 import com.cqjtu.mindassess.service.IAudioFileAnalysisService;
@@ -33,6 +34,7 @@ public class AudioRecognitionController {
      * @return
      */
     @ApiOperation("音频转文本及音频/文本请情绪")
+    @LogOperation("音频转文本及音频/文本请情绪")
     @PostMapping("/analysis")
     public ApiResponse<?> audioAnalysis(MultipartFile multipartFile){
         if(ObjectUtils.isEmpty(multipartFile)){

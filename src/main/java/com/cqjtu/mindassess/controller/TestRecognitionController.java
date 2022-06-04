@@ -1,5 +1,6 @@
 package com.cqjtu.mindassess.controller;
 
+import com.cqjtu.mindassess.annotation.LogOperation;
 import com.cqjtu.mindassess.common.ApiResponse;
 import com.cqjtu.mindassess.service.ICallPyScriptService;
 import io.swagger.annotations.Api;
@@ -29,6 +30,7 @@ public class TestRecognitionController {
     ICallPyScriptService callPyScriptService;
 
     @ApiOperation("文本情绪分析")
+    @LogOperation("文本情绪分析")
     @PostMapping("/analysis")
     public ApiResponse<?> textEmotionRecognition(@RequestBody String text){
         if(ObjectUtils.isEmpty(text)){
