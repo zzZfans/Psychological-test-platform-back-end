@@ -41,7 +41,8 @@ public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRec
     @Override
     public Boolean saveRecord(PushRecordReq req) {
         Long pusherId = ((User) StpUtil.getSession().get("user")).getId();
-        String content = HtmlUtils.htmlEscape(req.getMessage());
+        String content = HtmlUtil.getContent(req.getMessage());
+//        String content = HtmlUtils.htmlEscape(req.getMessage());
         if (sensitiveWordService.judgeSensitivityWord(content)) {
             throw new BusinessException("存在敏感词");
         }
