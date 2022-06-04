@@ -38,7 +38,8 @@ public class AutoMessageServiceImpl extends ServiceImpl<AutoMessageMapper, AutoM
     @Override
     public boolean saveAutoMessage(AutoMessageReq messageReq) {
         Long userId = ((User) StpUtil.getSession().get("user")).getId();
-        String content = HtmlUtils.htmlEscape(messageReq.getMessage());
+        String content = HtmlUtil.getContent(messageReq.getMessage());
+//        String content = HtmlUtils.htmlEscape(messageReq.getMessage());
         if (sensitiveWordService.judgeSensitivityWord(content)) {
             throw new BusinessException("存在敏感词");
         }

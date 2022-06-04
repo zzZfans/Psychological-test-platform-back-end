@@ -36,6 +36,11 @@ public class HtmlUtil extends HTMLEditorKit.ParserCallback {
         in.close();
     }
 
+    @Override
+    public void handleText(char[] text, int pos) {
+        s.append(text);
+    }
+
     public String getText() {
         return s.toString();
     }
