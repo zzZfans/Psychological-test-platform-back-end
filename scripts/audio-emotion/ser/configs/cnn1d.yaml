@@ -1,0 +1,30 @@
+model: cnn1d
+
+# 数据集
+data_path: datasets/CASIA  # 数据集路径
+class_labels: ["angry", "fear", "happy", "neutral", "sad", "surprise"]  # 情感标签
+# class_labels: ["positive", "negative", "neutral"]
+# class_labels: ["angry", "boredom", "disgust", "fear", "happy", "neutral", "sad"]
+
+# 特征
+feature_folder: features/6-category/opensmile_casia/  # 特征存储文件夹
+feature_method: o  # 'o': opensmile, 'l': librosa  # 特征提取方式
+
+# Opensmile 配置，只在 'feature_method: o' 时需要设置
+opensmile_config: IS10_paraling  # Opensmile 标准特征集
+opensmile_path: /Users/zou/opensmile-2.3.0  # Opensmile 安装路径
+
+# checkpoints
+checkpoint_path: checkpoints/  # checkpoint 存储路径
+checkpoint_name: CNN1D_OPENSMILE_IS10  # checkpoint 文件名
+
+# 训练参数
+epochs: 15  # 训练 epoch 数
+batch_size: 32  # 批大小
+lr: 0.001  # 学习率
+
+# 模型参数
+n_kernels: 32  # 卷积核数量（每个卷积层都一样）
+kernel_sizes: [5, 5]  # 每个卷积层的卷积核大小，列表长度为卷积层数量
+dropout: 0.5
+hidden_size: 32

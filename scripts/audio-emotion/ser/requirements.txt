@@ -1,0 +1,9 @@
+tensorflow==2.8.0
+scikit-learn==1.0.2
+numpy==1.21.5
+librosa==0.9.1
+scipy==1.8.0
+pandas==1.4.1
+matplotlib==3.4.2
+joblib==1.1.0
+pyyaml==6.0
